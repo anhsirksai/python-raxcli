@@ -65,6 +65,30 @@ class Flake8Command(Command):
         sys.exit(retcode)
 
 
+class TestCommand(Command):
+    description = 'Run test test script'
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            import unittest2
+            unittest2
+        except ImportError:
+            print ('Missing "unittest2" library. You can install it using '
+                   'pip: pip install unittest2')
+            sys.exit(1)
+
+        cwd = os.getcwd()
+        retcode = call(('unit2 discover %s/tests/' % (cwd)).split(' '))
+        sys.exit(retcode)
+
+
 setup(
     name='raxcli',
     version=read_version_string(),
@@ -82,12 +106,11 @@ setup(
                  'Environment :: Console',
                  ],
     cmdclass={
-        'flake8': Flake8Command,
+        'test': TestCommand,
+        'flake8': Flake8Command
     },
     platforms=['Any'],
     install_requires=[
-        # newer version is broken in 2.6, see
-        # https://bitbucket.org/catherinedevlin/cmd2/issue/3/fix-a-failure-under-python-26
         #'cmd2 == 0.6.4',
         'cliff == 1.3.1',
         'cliff-tablib >= 1.0',
