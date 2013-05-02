@@ -25,6 +25,8 @@ __all__ = [
     'format_timestamp'
 ]
 
+from datetime import datetime
+
 from service_registry.client import Client
 
 from raxcli.config import get_config as get_base_config
@@ -33,7 +35,8 @@ from raxcli.commands import BaseCommand, BaseShowCommand, BaseListCommand
 
 class BaseRegistryCommand(BaseCommand):
     def get_parser(self, prog_name):
-        parser = super(BaseRegistryCommand, self).get_parser(prog_name=prog_name)
+        parser = super(BaseRegistryCommand, self) \
+            .get_parser(prog_name=prog_name)
         parser.add_argument('--region', dest='region')
         return parser
 
@@ -44,7 +47,8 @@ class BaseRegistryShowCommand(BaseRegistryCommand, BaseShowCommand):
 
 class BaseRegistryListCommand(BaseRegistryCommand, BaseListCommand):
     def get_parser(self, prog_name):
-        parser = super(BaseRegistryListCommand, self).get_parser(prog_name=prog_name)
+        parser = super(BaseRegistryListCommand, self) \
+            .get_parser(prog_name=prog_name)
         parser.add_argument('--limit', dest='limit')
         parser.add_argument('--marker', dest='marker')
         return parser
@@ -108,5 +112,3 @@ def format_timestamp(timestamp):
 
     return datetime.fromtimestamp(timestamp / 1000) \
                    .strftime('%Y-%m-%d %H:%M:%S')
-
-
