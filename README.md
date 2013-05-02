@@ -2,7 +2,41 @@
 
 Command line client for interacting with various Rackspace Cloud APIs.
 
-## Testing and Lint
+## Installation
+
+```bash
+pip install -r raxcli
+```
+
+## Usage
+
+```bash
+raxcli <service> <resource> <action> [options]
+```
+
+For example:
+
+```bash
+raxcli registry services list
+```
+
+### Custom Output Formatter
+
+To specify a custom formatter, use `-f` option. For example:
+
+`raxcli registry services list -f json`
+
+#### Available Formatters
+
+* table
+* csv
+* json
+* yaml
+* html
+
+## Development
+
+### Testing and Lint
 
 Running tests
 
