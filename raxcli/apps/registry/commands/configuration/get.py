@@ -18,11 +18,11 @@
 import logging
 
 
-from raxcli.command import BaseShowCommand
+from raxcli.apps.registry.utils import BaseRegistryShowCommand
 from raxcli.apps.registry.utils import get_client
 
 
-class GetCommand(BaseShowCommand):
+class GetCommand(BaseRegistryShowCommand):
     """
     Return a single configuration value.
     """

@@ -23,7 +23,7 @@ __all__ = [
 from service_registry.client import Client
 
 from raxcli.config import get_config as get_base_config
-from raxcli.commands import BaseCommand, BaseListCommand
+from raxcli.commands import BaseCommand, BaseShowCommand, BaseListCommand
 
 
 class BaseRegistryCommand(BaseCommand):
@@ -31,6 +31,10 @@ class BaseRegistryCommand(BaseCommand):
         parser = super(BaseRegistryCommand, self).get_parser(prog_name=prog_name)
         parser.add_argument('--region', dest='region')
         return parser
+
+
+class BaseRegistryShowCommand(BaseRegistryCommand, BaseShowCommand):
+    pass
 
 
 class BaseRegistryListCommand(BaseRegistryCommand, BaseListCommand):
