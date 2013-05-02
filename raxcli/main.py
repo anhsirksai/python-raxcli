@@ -22,14 +22,14 @@ from os.path import join as pjoin
 
 import libcloud.security
 from cliff.app import App
-from cliff_rackspace.command_manager import CommandManager
+from cliff_rackspace.command_manager import AppCommandManager
 from cliff_rackspace.commands.help import HelpAction
 
 from rackspace_monitoring import __version__
 
 CA_CERT_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                             'data/cacert.pem')
-COMMANDS_PATH = pjoin(os.path.dirname(__file__), 'commands/')
+APPS_PATH = pjoin(os.path.dirname(__file__), 'apps/')
 
 libcloud.security.CA_CERTS_PATH.insert(0, CA_CERT_PATH)
 
@@ -44,8 +44,7 @@ class RaxCliApp(App):
         super(RaxCliApp, self).__init__(
             description='Rackspace Cloud Command Line Client',
             version=__version__,
-            command_manager=CommandManager('raxcli',
-                                           COMMANDS_PATH),
+            command_manager=AppCommandManager('raxcli', APPS_PATH),
         )
 
     def build_option_parser(self, description, version):
