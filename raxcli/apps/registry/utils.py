@@ -58,7 +58,7 @@ class BaseRegistryListCommand(BaseRegistryCommand, BaseListCommand):
 
 
 def get_config():
-    return get_base_config()
+    return get_base_config(app='registry')
 
 
 def get_client(parsed_args):
