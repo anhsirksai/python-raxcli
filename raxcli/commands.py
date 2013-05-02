@@ -38,7 +38,7 @@ class BaseCommand(Command):
 class BaseShowCommand(BaseCommand, ShowOne):
     def get_parser(self, prog_name):
         parser = super(BaseShowCommand, self).get_parser(prog_name=prog_name)
-        parser.add_argument('--id', dest='object_id')
+        parser.add_argument('--id', dest='object_id', required=True)
         return parser
 
 
