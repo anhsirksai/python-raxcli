@@ -17,7 +17,8 @@
 
 import os
 
-from raxcli.utils import get_config
+from raxcli.commands import BaseCommand, BaseListCommand
+from raxcli.config import get_config as get_base_config
 
 from rackspace_monitoring.providers import get_driver
 from rackspace_monitoring.types import Provider
@@ -27,6 +28,59 @@ import libcloud.security
 CA_CERT_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                             '../data/cacert.pem')
 libcloud.security.CA_CERTS_PATH.insert(0, CA_CERT_PATH)
+
+
+class MonitoringCommand(BaseCommand):
+    def get_parser(self, prog_name):
+        parser = super(MonitoringCommand, self).\
+            get_parser(prog_name=prog_name)
+        parser.add_argument('--auth-url', dest='auth_url')
+        return parser
+
+
+class MonitoringEntityCommand(MonitoringCommand):
+    def get_parser(self, prog_name):
+        parser = super(MonitoringEntityCommand, self).\
+            get_parser(prog_name=prog_name)
+        parser.add_argument('--entity-id', dest='entity_id', required=True)
+        return parser
+
+
+class MonitoringCheckCommand(MonitoringEntityCommand):
+    def get_parser(self, prog_name):
+        parser = super(MonitoringCheckCommand, self).\
+            get_parser(prog_name=prog_name)
+        parser.add_argument('--check-id', dest='check_id', required=True)
+        return parser
+
+
+class MonitoringListCommand(MonitoringCommand, BaseListCommand):
+    def get_parser(self, prog_name):
+        parser = super(MonitoringListCommand, self).\
+            get_parser(prog_name=prog_name)
+        parser.add_argument('--limit', dest='limit')
+        parser.add_argument('--marker', dest='marker')
+        return parser
+
+
+class MonitoringEntityListCommand(MonitoringListCommand):
+    def get_parser(self, prog_name):
+        parser = super(MonitoringEntityListCommand, self).\
+            get_parser(prog_name=prog_name)
+        parser.add_argument('--entity-id', dest='entity_id', required=True)
+        return parser
+
+
+class MonitoringCheckListCommand(MonitoringEntityListCommand):
+    def get_parser(self, prog_name):
+        parser = super(MonitoringCheckListCommand, self).\
+            get_parser(prog_name=prog_name)
+        parser.add_argument('--check-id', dest='check_id', required=True)
+        return parser
+
+
+def get_config():
+    return get_base_config()
 
 
 def get_client(parsed_args):
@@ -58,3 +112,13 @@ def get_client(parsed_args):
         options['ex_force_auth_url'] = auth_url
 
     return driver(username, api_key, **options)
+
+
+def get_formatted_details(details_dict):
+    """
+    Returns list of two tuples that have column headers and the related data.
+
+    Ex: [('details: foo', 'details: bar'), ('baz', 'qux')]
+    """
+    return zip(*[('details: %s' % k, v) for k, v in details_dict.iteritems()
+                 if v])
