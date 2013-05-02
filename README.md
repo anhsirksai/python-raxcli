@@ -10,6 +10,20 @@ Command line client is available on PyPi and can be installed using pip:
 pip install -r raxcli
 ```
 
+## Settings Credentials
+
+Credentials can be set (in order of precedence) as environment variables in a
+configuration file or you can pass them manually to each command.
+
+Default configuration file path is `~/.raxrc` but you can overrride it by
+setting the `RAXCLI_RAXRC` environment variable. For example:
+
+```bash
+RAXSR_RAXRC=~/.raxrc.uk raxcli registry services list
+```
+
+Example configuration files can be found in the `examples/` directory.
+
 ## Usage
 
 ```bash
