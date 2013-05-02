@@ -17,7 +17,12 @@
 
 __all__ = [
     'BaseRegistryCommand',
-    'BaseRegistryListCommand'
+    'BaseRegistryShowCommand',
+    'BaseRegistryListCommand',
+
+    'get_client',
+    'format_metadata',
+    'format_timestamp'
 ]
 
 from service_registry.client import Client
@@ -80,3 +85,28 @@ def get_client(parsed_args):
 
     c = Client(username=username, api_key=api_key, **kwargs)
     return c
+
+
+def format_metadata(metadata_dict):
+    metadata_str = ''
+
+    count = len(metadata_dict)
+    i = 0
+    for key, value in metadata_dict.items():
+        i += 1
+        metadata_str += '%s: %s' % (key, value)
+
+        if i < count:
+            metadata_str += ', '
+
+    return metadata_str
+
+
+def format_timestamp(timestamp):
+    if not timestamp:
+        return ''
+
+    return datetime.fromtimestamp(timestamp / 1000) \
+                   .strftime('%Y-%m-%d %H:%M:%S')
+
+
