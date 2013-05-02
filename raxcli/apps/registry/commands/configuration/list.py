@@ -1,4 +1,4 @@
-
+# Copyright 2013 Rackspace
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -16,8 +16,6 @@
 # limitations under the License.
 
 import logging
-
-from cliff.lister import Lister
 
 from raxcli.apps.registry.utils import BaseRegistryListCommand
 from raxcli.apps.registry.utils import get_client
