@@ -8,3 +8,4 @@ rackspace-monitoring>=0.3,<=0.4
 service-registry>=0.2,<=0.3
 
 flake8
+unittest2
