@@ -48,6 +48,7 @@ def get_config(app, config_path=DEFAULT_CONFIG_PATH,
     """
     Return dictionary with configuration values for a provided app.
     """
+
     keys = [
         ['global', 'username', 'username'],
         ['global', 'api_key', 'api_key'],
@@ -63,7 +64,7 @@ def get_config(app, config_path=DEFAULT_CONFIG_PATH,
     result['auth_url'] = os.getenv(env_prefix + 'AUTH_URL', None)
     result['verify_ssl'] = os.getenv(env_prefix + 'SSL_VERIFY', None)
 
-    config_path = os.getenv(env_prefix + 'RAXRC') or DEFAULT_CONFIG_PATH
+    config_path = os.getenv(env_prefix + 'RAXRC', config_path)
 
     config = ConfigParser.ConfigParser()
     config.read(config_path)
