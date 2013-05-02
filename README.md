@@ -1,4 +1,6 @@
-# raxcli
+# Rackspace CLI
+
+Command line client for interacting with various Rackspace Cloud APIs.
 
 ## Testing and Lint
 
