@@ -17,11 +17,6 @@
 
 import os
 
-try:
-    import ConfigParser
-except ImportError:
-    import configparser as ConfigParser
-
 from raxcli.utils import get_config
 
 from rackspace_monitoring.providers import get_driver
