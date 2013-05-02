@@ -21,8 +21,10 @@ __all__ = [
     'BaseRegistryListCommand',
 
     'get_client',
+
     'format_metadata',
-    'format_timestamp'
+    'format_timestamp',
+    'format_event_payload'
 ]
 
 from datetime import datetime
@@ -31,6 +33,7 @@ from service_registry.client import Client
 
 from raxcli.config import get_config as get_base_config
 from raxcli.commands import BaseCommand, BaseShowCommand, BaseListCommand
+from raxcli.apps.registry.constants import SERVICE_EVENTS
 
 
 class BaseRegistryCommand(BaseCommand):
@@ -112,3 +115,28 @@ def format_timestamp(timestamp):
 
     return datetime.fromtimestamp(timestamp / 1000) \
                    .strftime('%Y-%m-%d %H:%M:%S')
+
+
+def format_event_payload(event_response):
+    event_payload_str = ''
+    event_type = event_response['type']
+    event_payload = event_response['payload']
+
+    if not event_payload:
+        return event_payload_str
+
+    if event_type in SERVICE_EVENTS:
+        for key, value in event_payload.iteritems():
+            if key == 'metadata':
+                metadata_str = format_metadata(value)
+                event_payload_str += 'metadata: %s\n' % (metadata_str)
+            elif key == 'tags':
+                event_payload_str += '%s: %s\n' % (key, ', '.join(value))
+            else:
+                event_payload_str += '%s: %s\n' % (key, value)
+    else:
+        for key, value in event_payload.iteritems():
+            event_payload_str += '%s: %s\n' % (key, value)
+        event_payload_str = event_payload_str.strip(',\n')
+
+    return event_payload_str
