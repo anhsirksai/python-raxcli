@@ -20,7 +20,6 @@ import logging
 from raxcli.apps.registry.utils import BaseRegistryListCommand
 from raxcli.apps.registry.utils import get_client
 
-from raxcli.apps.registry.constants import SERVICE_EVENTS
 from raxcli.apps.registry.utils import format_timestamp
 from raxcli.apps.registry.utils import format_event_payload
 
