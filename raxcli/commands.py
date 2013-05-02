@@ -17,10 +17,12 @@
 
 __all__ = [
     'BaseCommand',
+    'BaseShowCommand',
     'BaseListCommand'
 ]
 
 from cliff.command import Command
+from cliff.show import ShowOne
 from cliff.lister import Lister
 
 
@@ -30,6 +32,13 @@ class BaseCommand(Command):
         parser.add_argument('--username', dest='username')
         parser.add_argument('--api-key', dest='api_key')
         parser.add_argument('--api-url', dest='api_url')
+        return parser
+
+
+class BaseShowCommand(BaseCommand, ShowOne):
+    def get_parser(self, prog_name):
+        parser = super(BaseShowCommand, self).get_parser(prog_name=prog_name)
+        parser.add_argument('--id', dest='object_id')
         return parser
 
 
