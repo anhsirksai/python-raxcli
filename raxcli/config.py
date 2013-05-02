@@ -16,6 +16,9 @@
 # limitations under the License.
 
 __all__ = [
+    'DEFAULT_ENV_PREFIX',
+    'DEFAULT_CONFIG_PATH',
+
     'get_config'
 ]
 
@@ -44,10 +47,13 @@ def to_bolean(value, default_value=False):
 
 
 def get_config(app, config_path=DEFAULT_CONFIG_PATH,
-               env_prefix=DEFAULT_ENV_PREFIX):
+               env_prefix=DEFAULT_ENV_PREFIX, env_dict=None):
     """
     Return dictionary with configuration values for a provided app.
     """
+
+    if env_dict is None:
+        env_dict = os.environ
 
     keys = [
         ['global', 'username', 'username'],
@@ -58,13 +64,13 @@ def get_config(app, config_path=DEFAULT_CONFIG_PATH,
 
     result = {}
 
-    result['username'] = os.getenv(env_prefix + 'USERNAME', None)
-    result['api_key'] = os.getenv(env_prefix + 'API_KEY', None)
-    result['api_url'] = os.getenv(env_prefix + 'API_URL', None)
-    result['auth_url'] = os.getenv(env_prefix + 'AUTH_URL', None)
-    result['verify_ssl'] = os.getenv(env_prefix + 'SSL_VERIFY', None)
+    result['username'] = env_dict.get(env_prefix + 'USERNAME', None)
+    result['api_key'] = env_dict.get(env_prefix + 'API_KEY', None)
+    result['api_url'] = env_dict.get(env_prefix + 'API_URL', None)
+    result['auth_url'] = env_dict.get(env_prefix + 'AUTH_URL', None)
+    result['verify_ssl'] = env_dict.get(env_prefix + 'VERIFY_SSL', None)
 
-    config_path = os.getenv(env_prefix + 'RAXRC', config_path)
+    config_path = env_dict.get(env_prefix + 'RAXRC', config_path)
 
     config = ConfigParser.ConfigParser()
     config.read(config_path)
