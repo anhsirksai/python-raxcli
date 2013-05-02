@@ -28,6 +28,9 @@ try:
 except IOError:
     long_description = ''
 
+CWD = os.path.dirname(os.path.abspath((__file__)))
+sys.path.insert(0, CWD)
+
 
 def read_version_string():
     version = None
@@ -84,8 +87,12 @@ class TestCommand(Command):
                    'pip: pip install unittest2')
             sys.exit(1)
 
+        # TODO: Use TestLoader
         cwd = os.getcwd()
-        retcode = call(('unit2 discover %s/tests/' % (cwd)).split(' '))
+        env = os.environ.copy()
+        env['PYTHONPATH'] = CWD
+        cmd = ('unit2 discover %s/tests/' % (cwd)).split(' ')
+        retcode = call(cmd, env=env)
         sys.exit(retcode)
 
 
