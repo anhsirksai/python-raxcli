@@ -13,7 +13,7 @@ python setup.py test
 Running lint
 
 ```bash
-python setup.py lint
+python setup.py flake8
 ```
 
 ## License

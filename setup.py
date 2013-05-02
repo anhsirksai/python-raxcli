@@ -25,8 +25,8 @@ def read_version_string():
 # https://github.com/apache/libcloud/blob/trunk/setup.py
 
 
-class Pep8Command(Command):
-    description = 'Run pep8 script'
+class Flake8Command(Command):
+    description = 'Run flake8 script'
     user_options = []
 
     def initialize_options(self):
@@ -37,15 +37,15 @@ class Pep8Command(Command):
 
     def run(self):
         try:
-            import pep8
-            pep8
+            import flake8
+            flake8
         except ImportError:
-            print ('Missing "pep8" library. You can install it using pip: '
-                   'pip install pep8')
+            print ('Missing "flake8" library. You can install it using pip: '
+                   'pip install flake8')
             sys.exit(1)
 
         cwd = os.getcwd()
-        retcode = call(('pep8 %s/raxcli/' % (cwd)).split(' '))
+        retcode = call(('flake8 %s/raxcli/' % (cwd)).split(' '))
         sys.exit(retcode)
 
 
@@ -66,7 +66,7 @@ setup(
                  'Environment :: Console',
                  ],
     cmdclass={
-        'pep8': Pep8Command,
+        'flake8': Flake8Command,
     },
     platforms=['Any'],
     install_requires=[
