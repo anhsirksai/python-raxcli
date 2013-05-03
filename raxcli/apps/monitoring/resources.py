@@ -108,3 +108,12 @@ class Entity(Object):
     extra = Attribute(view_list=False)
     agent_id = Attribute(view_list=False)
     ip_addresses = Attribute(view_list=False)
+
+
+class AgentToken(Object):
+    """
+    Agent token resource.
+    """
+    id = Attribute()
+    label = Attribute()
+    token = Attribute()
