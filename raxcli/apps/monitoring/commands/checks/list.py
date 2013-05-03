@@ -19,9 +19,11 @@ import logging
 
 from cliff.lister import Lister
 
-from raxcli.apps.monitoring.utils import MonitoringEntityListCommand
-from raxcli.apps.monitoring.utils import get_client
-from raxcli.apps.monitoring.resources import Entity
+from raxcli.apps.monitoring.utils import (MonitoringEntityListCommand,
+                                          get_client)
+from raxcli.apps.monitoring.resources import (Placeholder,
+                                              Check,
+                                              Collection)
 
 
 class ListCommand(MonitoringEntityListCommand, Lister):
@@ -34,12 +36,10 @@ class ListCommand(MonitoringEntityListCommand, Lister):
         client = get_client(parsed_args)
 
         marker = parsed_args.marker if parsed_args.marker else None
-        entity = Entity(parsed_args.entity_id)
-
+        entity = Placeholder(parsed_args.entity_id)
         kwargs = {'ex_next_marker': marker}
 
-        result = client.list_checks(entity, **kwargs)
-
-        checks = [(check.id, check.label, check.type) for check in result]
-
-        return (('id', 'label', 'type'), checks)
+        checks = [Check(check)
+                  for check in client.list_checks(entity, **kwargs)]
+        collection = Collection(checks)
+        return collection.generate_output()

@@ -19,8 +19,9 @@ import logging
 
 from cliff.show import ShowOne
 
-from raxcli.apps.monitoring.utils import MonitoringEntityCommand
-from raxcli.apps.monitoring.utils import get_client, get_formatted_details
+from raxcli.apps.monitoring.utils import (MonitoringEntityCommand,
+                                          get_client)
+from raxcli.apps.monitoring.resources import Check
 
 
 class ShowCommand(MonitoringEntityCommand, ShowOne):
@@ -36,27 +37,6 @@ class ShowCommand(MonitoringEntityCommand, ShowOne):
 
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
-
-        check = client.get_check(parsed_args.entity_id, parsed_args.check_id)
-
-        columns = ['id',
-                   'label',
-                   'entity id',
-                   'type',
-                   'monitoring_zones',
-                   'period',
-                   'timeout']
-
-        data = [check.id,
-                check.label,
-                check.entity_id,
-                check.type,
-                check.monitoring_zones,
-                check.period,
-                check.timeout]
-
-        details_columns, details_data = get_formatted_details(check.details)
-        columns.extend(details_columns)
-        data.extend(details_data)
-
-        return (columns, data)
+        check = Check(client.get_check(parsed_args.entity_id,
+                                       parsed_args.check_id))
+        return check.generate_output()
