@@ -76,7 +76,7 @@ class Collection(object):
         data = []
         for obj in self.objs:
             if not columns:
-                columns = obj.get_fields(view_type='view_list')
+                columns = obj.get_attrs(view_type='view_list')
             data.append([getattr(obj, attr).value for attr in columns])
         return (columns, data)
 
