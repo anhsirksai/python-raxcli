@@ -16,6 +16,8 @@
 # limitations under the License.
 
 import copy
+
+from operator import itemgetter
 from inspect import getmembers
 
 
@@ -32,9 +34,16 @@ class Attribute(object):
     """
     Generic attribute that represents a field on a resource.
     """
+    _creation_count = 0
+
     def __init__(self, view_single=True, view_list=True):
         self.view_single = view_single
         self.view_list = view_list
+
+        # Keep a count that is incremented on instantiation so we can iterate
+        # in the same order that attributes are delcared on an Object.
+        self._creation_count = Attribute._creation_count + 1
+        Attribute._creation_count = self._creation_count
 
 
 class Object(object):
@@ -49,8 +58,8 @@ class Object(object):
             if not isinstance(field, Attribute):
                 continue
             if not view_type or getattr(field, view_type):
-                attrs.append(attr)
-        return attrs
+                attrs.append((field._creation_count, attr))
+        return [attr for field, attr in sorted(attrs, key=itemgetter(0))]
 
     def __init__(self, obj):
         for attr in self.get_attrs():
