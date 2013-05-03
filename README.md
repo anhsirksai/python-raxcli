@@ -78,7 +78,7 @@ python setup.py flake8
 * REPL for every api
 * Friendly debug output when using --debug
 * Print CURL request actions when using --debug
-* Single, undefined configuration file (~/.raxrc)
+* Single, unified configuration file (~/.raxrc)
 
 ## License
 
