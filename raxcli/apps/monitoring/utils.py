@@ -112,13 +112,3 @@ def get_client(parsed_args):
         options['ex_force_auth_url'] = auth_url
 
     return driver(username, api_key, **options)
-
-
-def get_formatted_details(details_dict):
-    """
-    Returns list of two tuples that have column headers and the related data.
-
-    Ex: [('details: foo', 'details: bar'), ('baz', 'qux')]
-    """
-    return zip(*[('details: %s' % k, v) for k, v in details_dict.iteritems()
-                 if v])
