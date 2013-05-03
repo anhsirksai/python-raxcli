@@ -73,6 +73,6 @@ def get_client(parsed_args):
         options['ex_force_auth_url'] = auth_url
 
     if parsed_args.region is not None:
-        options['ex_force_region'] =  parsed_args.region
+        options['ex_force_region'] = parsed_args.region
 
     return driver(username, api_key, **options)
