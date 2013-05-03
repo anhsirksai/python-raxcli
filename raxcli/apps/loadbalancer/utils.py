@@ -35,6 +35,7 @@ class LoadBalancerCommand(BaseCommand):
         parser = super(LoadBalancerCommand, self).\
             get_parser(prog_name=prog_name)
         parser.add_argument('--auth-url', dest='auth_url')
+        parser.add_argument('--region', dest='region')
         return parser
 
 
@@ -70,5 +71,8 @@ def get_client(parsed_args):
 
     if auth_url is not None:
         options['ex_force_auth_url'] = auth_url
+
+    if parsed_args.region is not None:
+        options['ex_force_region'] =  parsed_args.region
 
     return driver(username, api_key, **options)
