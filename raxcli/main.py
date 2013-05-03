@@ -29,8 +29,7 @@ from rackspace_monitoring import __version__
 
 CA_CERT_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                             'data/cacert.pem')
-APPS_PATH = pjoin(os.path.dirname(__file__), 'apps/')
-
+APPS_PATH = pjoin(os.path.abspath(os.path.dirname(__file__)), 'apps/')
 libcloud.security.CA_CERTS_PATH.insert(0, CA_CERT_PATH)
 
 
@@ -64,6 +63,9 @@ class RaxCliApp(App):
 
 
 def main(argv=sys.argv[1:]):
+    if '--debug' in argv:
+        # TODO: improve --debug support, done here very early so we see everything possible.
+        logging.basicConfig(filename='/dev/stderr', filemode='w', level=logging.DEBUG)
     myapp = RaxCliApp()
     return myapp.run(argv)
 
