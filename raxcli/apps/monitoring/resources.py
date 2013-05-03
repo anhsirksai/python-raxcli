@@ -96,3 +96,15 @@ class Check(Object):
     target_resolver = Attribute(view_list=False)
     disabled = Attribute(view_list=False)
     details = Attribute(view_list=False)
+
+
+class Entity(Object):
+    """
+    Entity resource.
+    """
+    id = Attribute()
+    label = Attribute()
+    uri = Attribute()
+    extra = Attribute(view_list=False)
+    agent_id = Attribute(view_list=False)
+    ip_addresses = Attribute(view_list=False)
