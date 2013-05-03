@@ -80,7 +80,7 @@ class MonitoringCheckListCommand(MonitoringEntityListCommand):
 
 
 def get_config():
-    return get_base_config()
+    return get_base_config(app='monitoring')
 
 
 def get_client(parsed_args):
