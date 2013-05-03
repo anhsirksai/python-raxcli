@@ -64,8 +64,11 @@ class RaxCliApp(App):
 
 def main(argv=sys.argv[1:]):
     if '--debug' in argv:
-        # TODO: improve --debug support, done here very early so we see everything possible.
-        logging.basicConfig(filename='/dev/stderr', filemode='w', level=logging.DEBUG)
+        # TODO: improve --debug support, done here very early so we can
+        # see everything possible.
+        logging.basicConfig(filename='/dev/stderr',
+                            filemode='w',
+                            level=logging.DEBUG)
     myapp = RaxCliApp()
     return myapp.run(argv)
 
