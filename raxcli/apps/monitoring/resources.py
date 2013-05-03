@@ -117,3 +117,14 @@ class AgentToken(Object):
     id = Attribute()
     label = Attribute()
     token = Attribute()
+
+
+class Alarm(Object):
+    """
+    Alarm resource.
+    """
+    id = Attribute()
+    label = Attribute()
+    check_id = Attribute()
+    criteria = Attribute(view_list=False)
+    notification_plan_id = Attribute(view_list=False)
