@@ -20,7 +20,7 @@ import logging
 from cliff.lister import Lister
 
 from raxcli.apps.monitoring.utils import MonitoringEntityListCommand
-from raxcli.apps.monitoring.utils import get_client, get_formatted_details
+from raxcli.apps.monitoring.utils import get_client
 from raxcli.apps.monitoring.resources import Entity
 
 
