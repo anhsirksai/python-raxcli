@@ -59,7 +59,7 @@ class Object(object):
             setattr(self, attr, copy.copy(field))
 
     def generate_output(self):
-        columns = self.get_fields(view_type='view_single')
+        columns = self.get_attrs(view_type='view_single')
         data = [getattr(self, attr).value for attr in columns]
         return (columns, data)
 
