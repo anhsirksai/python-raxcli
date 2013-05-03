@@ -19,7 +19,7 @@ Default configuration file path is `~/.raxrc` but you can overrride it by
 setting the `RAXCLI_RAXRC` environment variable. For example:
 
 ```bash
-RAXSR_RAXRC=~/.raxrc.uk raxcli registry services list
+RAXCLI_RAXRC=~/.raxrc.uk raxcli registry services list
 ```
 
 Example configuration files can be found in the `examples/` directory.
