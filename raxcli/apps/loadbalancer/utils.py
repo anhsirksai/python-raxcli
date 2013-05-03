@@ -43,6 +43,17 @@ def get_config():
     return get_base_config(app='loadbalancer')
 
 
+def for_all_regions_list(parsed_args, func):
+    output = []
+    # TODO: others, LON?
+    lbregions = ['ord', 'dfw']
+    for region in lbregions:
+        parsed_args.region = region
+        client = get_client(parsed_args)
+        output.extend(func(client))
+    return output
+
+
 def get_client(parsed_args):
     config = get_config()
     # TODO: regions/uk

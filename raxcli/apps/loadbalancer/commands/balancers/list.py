@@ -20,7 +20,8 @@ import logging
 from cliff.show import ShowOne
 from clifftablib.formatters import JsonFormatter
 
-from raxcli.apps.loadbalancer.utils import LoadBalancerCommand, get_client
+from raxcli.apps.loadbalancer.utils import \
+    LoadBalancerCommand, for_all_regions_list
 from raxcli.apps.monitoring.resources import Object, Attribute, Collection
 
 
@@ -39,9 +40,10 @@ class ListCommand(LoadBalancerCommand, ShowOne):
     log = logging.getLogger(__name__)
 
     def take_action(self, parsed_args):
-        client = get_client(parsed_args)
+        def get_balancers(client):
+            return [Balancer(b) for b in client.list_balancers()]
 
-        balancers = [Balancer(b) for b in client.list_balancers()]
+        balancers = for_all_regions_list(parsed_args, get_balancers)
 
         collection = Collection(balancers)
 
