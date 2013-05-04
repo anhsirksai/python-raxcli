@@ -84,17 +84,17 @@ def get_config(app, config_path=DEFAULT_CONFIG_PATH,
         try:
             value = config.get(config_section, config_key)
         except ConfigParser.Error:
-            continue
-
-        result[key] = value
+            pass
+        else:
+            result[key] = value
 
         # app specific section
         try:
             value = config.get(app, config_key)
         except ConfigParser.Error:
-            continue
-
-        result[key] = value
+            pass
+        else:
+            result[key] = value
 
     result['verify_ssl'] = to_bolean(result['verify_ssl'], default_value=True)
 
