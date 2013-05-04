@@ -63,6 +63,36 @@ class TestConfigParsing(unittest.TestCase):
         self.assertEqual(config['api_key'], 'api_key_mon')
         self.assertEqual(config['verify_ssl'], True)
 
+    def test_config_from_file_default_values(self):
+        path1 = os.path.join(FIXTURES_DIR, 'config5.ini')
+
+        default_values = {'username': 'username_def', 'api_key': 'api_key_def',
+                          'verify_ssl': True, 'auth_url': 'aurl_def'}
+        config = get_config(app='monitoring', config_path=path1,
+                            default_values=default_values)
+
+        self.assertEqual(config['username'], 'username_def')
+        self.assertEqual(config['api_key'], 'api_key_def')
+        self.assertEqual(config['verify_ssl'], True)
+        self.assertEqual(config['auth_url'], 'aurl_def')
+
+    def test_config_from_file_default_values_and_env(self):
+        path1 = os.path.join(FIXTURES_DIR, 'config5.ini')
+
+        default_values = {'username': 'username_def', 'api_key': 'api_key_def',
+                          'verify_ssl': True, 'auth_url': 'aurl_def'}
+        env_dict = {}
+        env_dict[DEFAULT_ENV_PREFIX + 'USERNAME'] = 'username_env'
+        env_dict[DEFAULT_ENV_PREFIX + 'VERIFY_SSL'] = 'false'
+
+        config = get_config(app='monitoring', config_path=path1,
+                            default_values=default_values, env_dict=env_dict)
+
+        self.assertEqual(config['username'], 'username_env')
+        self.assertEqual(config['api_key'], 'api_key_def')
+        self.assertEqual(config['verify_ssl'], False)
+        self.assertEqual(config['auth_url'], 'aurl_def')
+
 
 if __name__ == '__main__':
     sys.exit(unittest.main())
