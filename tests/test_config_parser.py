@@ -54,19 +54,14 @@ class TestConfigParsing(unittest.TestCase):
         self.assertEqual(config['verify_ssl'], True)
         self.assertEqual(config['auth_url'], 'http://www.foo.com/2')
 
-    def test_config_from_file_global_section_with_env_overrides(self):
-        path1 = os.path.join(FIXTURES_DIR, 'config1.ini')
-        environ = {'VERIFY_SSL': False}
+    def test_config_from_file_only_app_section(self):
+        path1 = os.path.join(FIXTURES_DIR, 'config4.ini')
 
-        for key in ['username', 'api_key', 'auth_url']:
-            environ[DEFAULT_ENV_PREFIX + key.upper()] = key + '_override'
+        config = get_config(app='monitoring', config_path=path1)
 
-        config = get_config(app=None, config_path=path1, env_dict=environ)
-
-        self.assertEqual(config['username'], 'username_override')
-        self.assertEqual(config['api_key'], 'api_key_override')
+        self.assertEqual(config['username'], 'username_mon')
+        self.assertEqual(config['api_key'], 'api_key_mon')
         self.assertEqual(config['verify_ssl'], True)
-        self.assertEqual(config['auth_url'], 'auth_url_override')
 
 
 if __name__ == '__main__':
