@@ -17,13 +17,11 @@
 
 import logging
 
-from cliff.lister import Lister
-
 from raxcli.apps.monitoring.utils import MonitoringListCommand, get_client
 from raxcli.apps.monitoring.resources import Entity, Collection
 
 
-class ListCommand(MonitoringListCommand, Lister):
+class ListCommand(MonitoringListCommand):
     """
     Return a list of entities.
     """

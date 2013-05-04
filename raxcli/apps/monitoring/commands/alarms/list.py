@@ -17,14 +17,12 @@
 
 import logging
 
-from cliff.lister import Lister
-
 from raxcli.apps.monitoring.utils import (MonitoringEntityListCommand,
                                           get_client)
 from raxcli.apps.monitoring.resources import Alarm, Collection, Placeholder
 
 
-class ListCommand(MonitoringEntityListCommand, Lister):
+class ListCommand(MonitoringEntityListCommand):
     """
     Return a list of alarms.
     """
