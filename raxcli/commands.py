@@ -132,9 +132,14 @@ class HelpCommand(Command):
                     raise
 
                 for command_match in command_matches:
-                    args = (binary, app_match, sub_command_match,
-                            command_match)
-                    to_write += [' - %s %s %s %s\n' % args]
+                    args = []
+                    if not self.app.interactive_mode:
+                        # Don't include binary name inside the repl
+                        args += [binary]
+
+                    args += [app_match, sub_command_match,
+                             command_match]
+                    to_write += [' - %s\n' % (' '.join(args))]
 
         self.app.stdout.write(''.join(to_write))
 
