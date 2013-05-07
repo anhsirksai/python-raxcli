@@ -41,7 +41,7 @@ class HelpCommand(Command):
 
     def _get_app_fuzzy_matches(self, app):
         fuzzy_matches = [k for k in self.app.command_manager.commands.keys()
-                         if k.startswith(app)]
+                         if k.startswith(app) and k != 'help']
 
         return fuzzy_matches
 
@@ -54,6 +54,17 @@ class HelpCommand(Command):
 
         fuzzy_matches = [k for k in sub_commands
                          if k.startswith(sub_command)]
+
+        return fuzzy_matches
+
+    def _get_command_fuzzy_matches(self, app, sub_command, command=None):
+        commands = self.app.command_manager.commands[app][sub_command].keys()
+
+        if not command:
+            return commands
+
+        fuzzy_matches = [k for k in commands
+                         if k.startswith(command)]
 
         return fuzzy_matches
 
@@ -84,33 +95,48 @@ class HelpCommand(Command):
 
         # Did not find an exact match
         cmd = parsed_args.cmd
-        cmd_string = ' '.join(parsed_args.cmd)
+        cmd_string = ' '.join(parsed_args.cmd).strip()
 
         binary = self.app.command_manager.namespace
         app = cmd[0]
         sub_command = None
+        command = None
 
         if len(cmd) >= 2:
             sub_command = cmd[1]
+
+        if len(cmd) > 2:
+            command = cmd[2]
 
         app_matches = self._get_app_fuzzy_matches(app=app)
 
         if not app_matches:
             raise
 
-        self.app.stdout.write('Command "%s" matches:\n\n' % (cmd_string))
+        to_write = ['Command "%s" matches:\n\n' % (cmd_string)]
 
         for app_match in app_matches:
-            manager_commands = self.app.command_manager.commands[app_match]
             sub_command_matches = \
                 self._get_sub_command_fuzzy_matches(app_match, sub_command)
 
-            for sub_command_match in sub_command_matches:
-                commands = manager_commands[sub_command_match].keys()
+            if not sub_command_matches:
+                raise
 
-                for command in commands:
-                    args = (binary, app_match, sub_command_match, command)
-                    self.app.stdout.write(' - %s %s %s %s\n' % args)
+            for sub_command_match in sub_command_matches:
+                command_matches = \
+                    self._get_command_fuzzy_matches(app_match,
+                                                    sub_command_match,
+                                                    command)
+
+                if not command_matches:
+                    raise
+
+                for command_match in command_matches:
+                    args = (binary, app_match, sub_command_match,
+                            command_match)
+                    to_write += [' - %s %s %s %s\n' % args]
+
+        self.app.stdout.write(''.join(to_write))
 
 
 class BaseCommand(Command):

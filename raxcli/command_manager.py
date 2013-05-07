@@ -133,23 +133,53 @@ class AppCommandManager(object):
         if len(argv) > 2:
             command = argv[2]
             start_index = 3
+        else:
+            app = argv[0]
+            command = None
+
+        if not command:
+            if called_by_help:
+                cmd_string = ' '.join(argv).strip()
+                raise ValueError('Unknown command: %s' % (cmd_string))
+
+            command_entry = self.commands.get('help', {}).get('index', None)
+            cmd_factory = command_entry.load()
+
+            if app:
+                args = [app]
+            else:
+                args = []
+
+            if sub_command:
+                args += [sub_command]
+
+            if command:
+                args += [command]
+
+            command = ''
+            return (cmd_factory, command, args)
 
         command_entry = self.commands.get(app, {}).get(sub_command, {}) \
-                                     .get(command, None)
+            .get(command, None)
 
         if not command_entry:
             if called_by_help:
-                raise ValueError('Unknown command: %r' %
-                                 (' '.join(argv),))
+                cmd_string = ' '.join(argv).strip()
+                raise ValueError('Unknown command: %s' % (cmd_string))
             else:
                 command_entry = self.commands.get('help', {}) \
                                              .get('index', None)
                 cmd_factory = command_entry.load()
 
-                args = [command]
+                if app:
+                    args = [app]
+                else:
+                    args = []
 
                 if sub_command:
                     args += [sub_command]
+
+                args += [command]
 
                 return (cmd_factory, command, args)
 
