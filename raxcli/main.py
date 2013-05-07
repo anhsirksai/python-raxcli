@@ -22,9 +22,9 @@ from os.path import join as pjoin
 
 import libcloud.security
 from cliff.app import App
-from cliff_rackspace.command_manager import AppCommandManager
-from cliff_rackspace.commands.help import HelpAction
 
+from raxcli.command_manager import AppCommandManager
+from raxcli.actions import HelpAction
 from raxcli import __version__
 
 CA_CERT_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
