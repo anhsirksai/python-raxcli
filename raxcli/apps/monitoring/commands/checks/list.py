@@ -17,11 +17,10 @@
 
 import logging
 
+from raxcli.model import Placeholder, Collection
 from raxcli.apps.monitoring.utils import (MonitoringEntityListCommand,
                                           get_client)
-from raxcli.apps.monitoring.resources import (Placeholder,
-                                              Check,
-                                              Collection)
+from raxcli.apps.monitoring.resources import Check
 
 
 class ListCommand(MonitoringEntityListCommand):

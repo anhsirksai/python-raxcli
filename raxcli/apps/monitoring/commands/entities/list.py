@@ -17,8 +17,9 @@
 
 import logging
 
+from raxcli.model import Collection
 from raxcli.apps.monitoring.utils import MonitoringListCommand, get_client
-from raxcli.apps.monitoring.resources import Entity, Collection
+from raxcli.apps.monitoring.resources import Entity
 
 
 class ListCommand(MonitoringListCommand):
