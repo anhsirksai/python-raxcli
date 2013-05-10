@@ -1,6 +1,6 @@
-from raxcli.resources import Object, Attribute, Collection
+from raxcli.models import Model, Attribute, Collection
 
-class Node(Object):
+class Node(Model):
     """
     Node resource.
     """

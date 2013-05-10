@@ -18,7 +18,8 @@
 import logging
 
 from raxcli.apps.server.utils import BaseServerListCommand, get_client
-from raxcli.apps.server.resources import Node, Collection
+from raxcli.apps.server.resources import Node
+from raxcli.models import Collection
 
 
 class ListCommand(BaseServerListCommand):
