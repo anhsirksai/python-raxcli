@@ -17,13 +17,11 @@
 
 import logging
 
-from cliff.show import ShowOne
-from clifftablib.formatters import JsonFormatter
-
+from raxcli.commands import BaseListCommand
 from raxcli.apps.loadbalancer.utils import LoadBalancerCommand, get_client
 
 
-class ListCommand(LoadBalancerCommand, ShowOne):
+class ListCommand(LoadBalancerCommand, BaseListCommand):
     """
     Output Protocol list.
     """
@@ -34,6 +32,5 @@ class ListCommand(LoadBalancerCommand, ShowOne):
 
         protocols = client.ex_list_protocols_with_default_ports()
 
-        columns = [proto[0] for proto in protocols]
-        data = [proto[1] for proto in protocols]
-        return (columns, data)
+        columns = ('Protocol', 'Port')
+        return (columns, protocols)
