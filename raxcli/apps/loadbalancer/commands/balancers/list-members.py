@@ -15,23 +15,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__all__ = [
-    'Balancer',
-    'Member'
-]
 
-from raxcli.models import Attribute, Model
+import logging
 
-
-class Balancer(Model):
-    id = Attribute()
-    name = Attribute()
-    state = Attribute()
-    ip = Attribute()
-    port = Attribute()
+from raxcli.models import Placeholder, Collection
+from raxcli.apps.loadbalancer.resources import Member
+from raxcli.apps.loadbalancer.utils import get_client
+from raxcli.apps.loadbalancer.utils import LoadBalancerBalancerListCommand
 
 
-class Member(Model):
-    id = Attribute()
-    ip = Attribute()
-    port = Attribute()
+class ListMembersCommand(LoadBalancerBalancerListCommand):
+    """
+    Output a list of the members attached to the provided loadbalancer.
+    """
+    log = logging.getLogger(__name__)
+
+    def take_action(self, parsed_args):
+        client = get_client(parsed_args)
+        balancer = Placeholder(parsed_args.balancer_id)
+
+        members = client.balancer_list_members(balancer=balancer)
+        members = [Member(m) for m in members]
+        collection = Collection(members)
+        return collection.generate_output()

@@ -39,6 +39,14 @@ class LoadBalancerCommand(BaseCommand):
         return parser
 
 
+class LoadBalancerBalancerListCommand(LoadBalancerCommand, BaseListCommand):
+    def get_parser(self, prog_name):
+        parser = super(LoadBalancerBalancerListCommand, self).\
+            get_parser(prog_name=prog_name)
+        parser.add_argument('--balancer-id', dest='balancer_id', required=True)
+        return parser
+
+
 def get_config():
     return get_base_config(app='loadbalancer')
 
