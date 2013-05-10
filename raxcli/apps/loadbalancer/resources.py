@@ -15,26 +15,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
+__all__ = [
+    'Balancer'
+]
 
-from raxcli.models import Model, Attribute, Collection
-from raxcli.commands import BaseListCommand
-from raxcli.apps.loadbalancer.resources import Balancer
-from raxcli.apps.loadbalancer.utils import \
-    LoadBalancerCommand, for_all_regions_list
+from raxcli.models import Attribute, Model
 
 
-class ListCommand(LoadBalancerCommand, BaseListCommand):
-    """
-    Output Balancers list.
-    """
-    log = logging.getLogger(__name__)
-
-    def take_action(self, parsed_args):
-        def get_balancers(client):
-            return [Balancer(b) for b in client.list_balancers()]
-
-        balancers = for_all_regions_list(parsed_args, get_balancers)
-        collection = Collection(balancers)
-
-        return collection.generate_output()
+class Balancer(Model):
+    id = Attribute()
+    name = Attribute()
+    state = Attribute()
+    ip = Attribute()
+    port = Attribute()
