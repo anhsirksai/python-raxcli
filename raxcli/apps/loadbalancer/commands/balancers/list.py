@@ -17,7 +17,7 @@
 
 import logging
 
-from raxcli.models import Model, Attribute, Collection
+from raxcli.models import Collection
 from raxcli.commands import BaseListCommand
 from raxcli.apps.loadbalancer.resources import Balancer
 from raxcli.apps.loadbalancer.utils import \

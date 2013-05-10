@@ -35,7 +35,7 @@ class ListCommand(LoadBalancerCommand, BaseListCommand):
 
         available_algorithms = get_enum_as_dict(Algorithm, True)
         algorithms = client.list_supported_algorithms()
-        result = [(value, key) for key, value in available_algorithms.items() \
+        result = [(value, key) for key, value in available_algorithms.items()
                   if value in algorithms]
         result = sorted(result)
 

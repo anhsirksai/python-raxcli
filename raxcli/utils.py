@@ -17,7 +17,7 @@
 
 
 __all__ = [
-    'get_enum_as_tuples'
+    'get_enum_as_dict'
 ]
 
 
