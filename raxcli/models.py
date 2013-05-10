@@ -43,7 +43,13 @@ class Attribute(object):
     """
     _creation_count = 0
 
-    def __init__(self, view_single=True, view_list=True):
+    def __init__(self, src=None, view_single=True, view_list=True):
+        """
+        @keyword src: Optional name of the field on the object which acts as a
+                      source for this attribute.
+        @keyword src: C{str}
+        """
+        self.src = src
         self.view_single = view_single
         self.view_list = view_list
 
@@ -59,23 +65,30 @@ class Model(object):
     should be presented.
     """
     def get_attrs(self, view_type=None):
+        """
+        Get model attributes for the provided view_type.
+        """
         attrs = []
         for attr, _ in getmembers(self):
             field = getattr(self, attr)
+
             if not isinstance(field, Attribute):
                 continue
+
             if not view_type or getattr(field, view_type):
-                attrs.append((field._creation_count, attr))
+                src = field.src if field.src else attr
+                attrs.append((field._creation_count, [attr, src]))
+
         return [attr for field, attr in sorted(attrs, key=itemgetter(0))]
 
     def __init__(self, obj):
-        for attr in self.get_attrs():
-            field = getattr(self, attr)
-            field.value = getattr(obj, attr)
-            setattr(self, attr, copy.copy(field))
+        for name, source in self.get_attrs():
+            field = getattr(self, name)
+            field.value = getattr(obj, source)
+            setattr(self, name, copy.copy(field))
 
     def generate_output(self):
-        columns = self.get_attrs(view_type='view_single')
+        columns = [attr for attr, _ in self.get_attrs(view_type='view_single')]
         data = [getattr(self, attr).value for attr in columns]
         return (columns, data)
 
@@ -92,6 +105,8 @@ class Collection(object):
         data = []
         for obj in self.objs:
             if not columns:
-                columns = obj.get_attrs(view_type='view_list')
+                columns = [attr for attr, _ in
+                           obj.get_attrs(view_type='view_list')]
             data.append([getattr(obj, attr).value for attr in columns])
+
         return (columns, data)
