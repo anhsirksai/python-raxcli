@@ -17,15 +17,13 @@
 
 import logging
 
-from cliff.show import ShowOne
-from clifftablib.formatters import JsonFormatter
-
+from raxcli.models import Model, Attribute, Collection
+from raxcli.commands import BaseListCommand
 from raxcli.apps.loadbalancer.utils import \
     LoadBalancerCommand, for_all_regions_list
-from raxcli.apps.monitoring.resources import Object, Attribute, Collection
 
 
-class Balancer(Object):
+class Balancer(Model):
     name = Attribute()
     id = Attribute()
     state = Attribute()
@@ -33,7 +31,7 @@ class Balancer(Object):
     port = Attribute()
 
 
-class ListCommand(LoadBalancerCommand, ShowOne):
+class ListCommand(LoadBalancerCommand, BaseListCommand):
     """
     Output Balancers list.
     """
@@ -44,7 +42,6 @@ class ListCommand(LoadBalancerCommand, ShowOne):
             return [Balancer(b) for b in client.list_balancers()]
 
         balancers = for_all_regions_list(parsed_args, get_balancers)
-
         collection = Collection(balancers)
 
         return collection.generate_output()
