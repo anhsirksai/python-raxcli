@@ -32,6 +32,7 @@ class BaseCommand(Command):
         parser.add_argument('--username', dest='username')
         parser.add_argument('--api-key', dest='api_key')
         parser.add_argument('--api-url', dest='api_url')
+        parser.add_argument('--json', dest='json_options')
         return parser
 
 

@@ -17,7 +17,7 @@
 
 import logging
 
-from raxcli.model import Collection, Placeholder
+from raxcli.models import Collection, Placeholder
 from raxcli.apps.monitoring.utils import (MonitoringEntityListCommand,
                                           get_client)
 from raxcli.apps.monitoring.resources import Alarm
