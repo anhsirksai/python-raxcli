@@ -21,11 +21,12 @@ __all__ = [
 ]
 
 
-def get_enum_as_tuples(cls, friendly_names=False):
+def get_enum_as_dict(cls, friendly_names=False):
     """
-    Convert an "enum" class to a list of (enum_value, enum_name) tuples.
+    Convert an "enum" class to a dict key is the enum name and value is an enum
+    value.
     """
-    result = []
+    result = {}
     for key, value in cls.__dict__.items():
         if key.startswith('__'):
             continue
@@ -38,6 +39,6 @@ def get_enum_as_tuples(cls, friendly_names=False):
         if friendly_names:
             name = name.replace('_', ' ').lower().title()
 
-        result.append((value, name))
+        result[name] = value
 
     return result
