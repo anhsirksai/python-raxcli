@@ -15,28 +15,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 
-from raxcli.models import Placeholder, Collection
-from raxcli.apps.monitoring.utils import (MonitoringEntityListCommand,
-                                          get_client)
-from raxcli.apps.monitoring.resources import Check
+__all__ = [
+    'get_enum_as_tuples'
+]
 
 
-class ListCommand(MonitoringEntityListCommand):
+def get_enum_as_tuples(cls, friendly_names=False):
     """
-    Return a list of checks.
+    Convert an "enum" class to a list of (enum_value, enum_name) tuples.
     """
-    log = logging.getLogger(__name__)
+    result = []
+    for key, value in cls.__dict__.items():
+        if key.startswith('__'):
+            continue
 
-    def take_action(self, parsed_args):
-        client = get_client(parsed_args)
+        if key[0] != key[0].upper():
+            continue
 
-        marker = parsed_args.marker if parsed_args.marker else None
-        entity = Placeholder(parsed_args.entity_id)
-        kwargs = {'ex_next_marker': marker}
+        name = key
 
-        checks = [Check(check)
-                  for check in client.list_checks(entity, **kwargs)]
-        collection = Collection(checks)
-        return collection.generate_output()
+        if friendly_names:
+            name = name.replace('_', ' ').lower().title()
+
+        result.append((value, name))
+
+    return result

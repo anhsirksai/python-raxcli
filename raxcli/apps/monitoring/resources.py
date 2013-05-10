@@ -15,9 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from raxcli.resources import Object, Attribute, Collection
 
-class Check(Object):
+from raxcli.models import Attribute, Model
+
+
+class Check(Model):
     """
     Check resource.
     """
@@ -34,7 +36,7 @@ class Check(Object):
     details = Attribute(view_list=False)
 
 
-class Entity(Object):
+class Entity(Model):
     """
     Entity resource.
     """
@@ -46,7 +48,7 @@ class Entity(Object):
     ip_addresses = Attribute(view_list=False)
 
 
-class AgentToken(Object):
+class AgentToken(Model):
     """
     Agent token resource.
     """
@@ -55,7 +57,7 @@ class AgentToken(Object):
     token = Attribute()
 
 
-class Alarm(Object):
+class Alarm(Model):
     """
     Alarm resource.
     """
