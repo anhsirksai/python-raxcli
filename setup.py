@@ -19,9 +19,12 @@
 import os
 import sys
 
+from os.path import join as pjoin
+
 from distutils.core import Command
 from setuptools import setup, find_packages
 from subprocess import call
+from unittest2 import TestLoader, TextTestRunner
 
 try:
     long_description = open('README.md', 'rt').read()
@@ -29,6 +32,8 @@ except IOError:
     long_description = ''
 
 CWD = os.path.dirname(os.path.abspath((__file__)))
+TESTS_PATH = pjoin(CWD, 'tests/')
+
 sys.path.insert(0, CWD)
 
 
@@ -87,13 +92,13 @@ class TestCommand(Command):
                    'pip: pip install unittest2')
             sys.exit(1)
 
-        # TODO: Use TestLoader
-        cwd = os.getcwd()
-        env = os.environ.copy()
-        env['PYTHONPATH'] = CWD
-        cmd = ('unit2 discover %s/tests/' % (cwd)).split(' ')
-        retcode = call(cmd, env=env)
-        sys.exit(retcode)
+        loader = TestLoader()
+        tests = loader.discover(TESTS_PATH)
+        runner = TextTestRunner(verbosity=2)
+        result = runner.run(tests)
+
+        if not result.wasSuccessful():
+            sys.exit(1)
 
 
 setup(
