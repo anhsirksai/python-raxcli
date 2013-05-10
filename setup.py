@@ -118,8 +118,7 @@ setup(
     },
     platforms=['Any'],
     install_requires=[
-        #'cmd2 == 0.6.4',
-        'cliff == 1.3.1',
+        'cliff == 1.3.3',
         'cliff-tablib >= 1.0',
         'cliff-rackspace >= 0.1.1',
     ],

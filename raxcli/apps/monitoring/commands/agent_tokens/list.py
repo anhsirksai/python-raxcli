@@ -17,13 +17,12 @@
 
 import logging
 
-from cliff.lister import Lister
-
+from raxcli.models import Collection
 from raxcli.apps.monitoring.utils import MonitoringListCommand, get_client
-from raxcli.apps.monitoring.resources import AgentToken, Collection
+from raxcli.apps.monitoring.resources import AgentToken
 
 
-class ListCommand(MonitoringListCommand, Lister):
+class ListCommand(MonitoringListCommand):
     """
     Return a list of agent tokens.
     """

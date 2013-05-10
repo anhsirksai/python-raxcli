@@ -17,16 +17,13 @@
 
 import logging
 
-from cliff.lister import Lister
-
+from raxcli.models import Placeholder, Collection
 from raxcli.apps.monitoring.utils import (MonitoringEntityListCommand,
                                           get_client)
-from raxcli.apps.monitoring.resources import (Placeholder,
-                                              Check,
-                                              Collection)
+from raxcli.apps.monitoring.resources import Check
 
 
-class ListCommand(MonitoringEntityListCommand, Lister):
+class ListCommand(MonitoringEntityListCommand):
     """
     Return a list of checks.
     """

@@ -58,7 +58,6 @@ class MonitoringListCommand(MonitoringCommand, BaseListCommand):
     def get_parser(self, prog_name):
         parser = super(MonitoringListCommand, self).\
             get_parser(prog_name=prog_name)
-        parser.add_argument('--limit', dest='limit')
         parser.add_argument('--marker', dest='marker')
         return parser
 

@@ -43,17 +43,43 @@ def to_bolean(value, default_value=False):
     if value is None:
         return default_value
 
+    if isinstance(value, bool):
+        return value
+
     return not (value.lower() == 'false')
 
 
-def get_config(app, config_path=DEFAULT_CONFIG_PATH,
+def get_config(app, default_values=None, config_path=DEFAULT_CONFIG_PATH,
                env_prefix=DEFAULT_ENV_PREFIX, env_dict=None):
     """
     Return dictionary with configuration values for a provided app.
+
+    @param  app: Name of the app configuration is being retrieved for.
+    @type   app: C{str}
+
+    @param  default_values: Default configuration values.
+    @type   default_values: C{dict}
+
+    @param  config_path: Path to the config file.
+    @type   config_path: C{str}
+
+    @param  env_prefix: Environment variables prefix.
+    @type   env_prefix: C{str}
+
+    @param  env_dict: Dictionary with environment variables. If not provided,
+                      os.environ is used.
+    @type   env_dict: C{dict}
+
+    @return Configuration values.
+    @rtype: C{dict}
     """
+    result = {}
 
     if env_dict is None:
         env_dict = os.environ
+
+    if default_values is None:
+        default_values = {}
 
     keys = [
         ['global', 'username', 'username'],
@@ -62,13 +88,14 @@ def get_config(app, config_path=DEFAULT_CONFIG_PATH,
         ['global', 'auth_url', 'auth_url'],
     ]
 
-    result = {}
+    env_keys = ['username', 'api_key', 'api_url', 'auth_url', 'verify_ssl']
 
-    result['username'] = env_dict.get(env_prefix + 'USERNAME', None)
-    result['api_key'] = env_dict.get(env_prefix + 'API_KEY', None)
-    result['api_url'] = env_dict.get(env_prefix + 'API_URL', None)
-    result['auth_url'] = env_dict.get(env_prefix + 'AUTH_URL', None)
-    result['verify_ssl'] = env_dict.get(env_prefix + 'VERIFY_SSL', None)
+    for key in env_keys:
+        env_key = env_prefix + key
+        env_key = env_key.upper()
+
+        if env_key in env_dict:
+            result[key] = env_dict[env_key]
 
     config_path = env_dict.get(env_prefix + 'RAXRC', config_path)
 
@@ -76,7 +103,7 @@ def get_config(app, config_path=DEFAULT_CONFIG_PATH,
     config.read(config_path)
 
     for (config_section, config_key, key) in keys:
-        if result[key]:
+        if key in result:
             # Already specified as an env variable
             continue
 
@@ -84,18 +111,24 @@ def get_config(app, config_path=DEFAULT_CONFIG_PATH,
         try:
             value = config.get(config_section, config_key)
         except ConfigParser.Error:
-            continue
-
-        result[key] = value
+            pass
+        else:
+            result[key] = value
 
         # app specific section
         try:
             value = config.get(app, config_key)
         except ConfigParser.Error:
-            continue
+            pass
+        else:
+            result[key] = value
 
-        result[key] = value
+    if 'verify_ssl' in result:
+        result['verify_ssl'] = to_bolean(result['verify_ssl'],
+                                         default_value=True)
 
-    result['verify_ssl'] = to_bolean(result['verify_ssl'], default_value=True)
+    for key, value in default_values.items():
+        if key not in result:
+            result[key] = value
 
     return result
