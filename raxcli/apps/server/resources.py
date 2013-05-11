@@ -1,5 +1,6 @@
 from raxcli.models import Model, Attribute, Collection
 
+
 class Node(Model):
     """
     Node resource.
@@ -12,4 +13,13 @@ class Node(Model):
     private_ips = Attribute()
     size = Attribute()
     image = Attribute()
+    extra = Attribute()
+
+
+class Image(Model):
+    """
+    Image resource.
+    """
+    id = Attribute()
+    name = Attribute()
     extra = Attribute()
