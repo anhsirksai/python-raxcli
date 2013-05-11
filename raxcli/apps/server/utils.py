@@ -42,6 +42,7 @@ class BaseServerCommand(BaseCommand):
         parser = super(BaseServerCommand, self).\
             get_parser(prog_name=prog_name)
         parser.add_argument('--auth-url', dest='auth_url')
+        parser.add_argument('--region', dest='region')
         return parser
 
 
@@ -59,8 +60,17 @@ def get_config():
 
 
 def get_client(parsed_args):
+    region = Provider.RACKSPACE
     config = get_config()
-    driver = get_driver(Provider.RACKSPACE_NOVA_ORD)
+
+    if parsed_args.region == 'ord':
+        region = Provider.RACKSPACE_NOVA_ORD
+    elif parsed_args.region == 'dfw':
+        region = Provider.RACKSPACE_NOVA_DFW
+    elif parsed_args.region == 'lon':
+        region = Provider.RACKSPACE_NOVA_LON
+
+    driver = get_driver(region)
 
     username = config['username']
     api_key = config['api_key']
