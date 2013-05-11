@@ -42,7 +42,7 @@ class BaseServerCommand(BaseCommand):
         parser = super(BaseServerCommand, self).\
             get_parser(prog_name=prog_name)
         parser.add_argument('--auth-url', dest='auth_url')
-        parser.add_argument('--region', dest='region')
+        parser.add_argument('--region', dest='region', help='(ord, dfw, lon)')
         return parser
 
 
