@@ -1,4 +1,4 @@
-from raxcli.models import Model, Attribute, Collection
+from raxcli.models import Model, Attribute
 
 
 class Node(Model):

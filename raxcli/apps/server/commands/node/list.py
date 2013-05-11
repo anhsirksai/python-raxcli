@@ -30,7 +30,6 @@ class ListCommand(BaseServerListCommand):
 
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
-        nodes = [Node(node)
-                    for node in client.list_nodes()]
+        nodes = [Node(node) for node in client.list_nodes()]
         collection = Collection(nodes)
         return collection.generate_output()

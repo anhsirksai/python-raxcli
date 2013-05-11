@@ -24,7 +24,7 @@ __all__ = [
 
 import os
 
-from raxcli.commands import BaseCommand, BaseShowCommand, BaseListCommand
+from raxcli.commands import BaseCommand, BaseListCommand
 from raxcli.config import get_config as get_base_config
 
 from libcloud.compute.types import Provider
