@@ -23,3 +23,15 @@ class Image(Model):
     id = Attribute()
     name = Attribute()
     extra = Attribute()
+
+
+class Size(Model):
+    """
+    Size resource.
+    """
+    id = Attribute()
+    name = Attribute()
+    ram = Attribute()
+    disk = Attribute()
+    bandwidth = Attribute()
+    price = Attribute()
