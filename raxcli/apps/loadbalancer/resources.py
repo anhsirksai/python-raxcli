@@ -35,3 +35,11 @@ class Member(Model):
     id = Attribute()
     ip = Attribute()
     port = Attribute()
+
+
+class Algorithm(Model):
+    id = Attribute()
+    algorithm = Attribute()
+
+    def __cmp__(self, other):
+        return cmp(self.id.value, other.id.value)

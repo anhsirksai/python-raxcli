@@ -19,6 +19,8 @@ import logging
 
 from libcloud.loadbalancer.base import Algorithm
 
+from raxcli.models import Collection
+from raxcli.apps.loadbalancer.resources import Algorithm as AlgorithmModel
 from raxcli.commands import BaseListCommand
 from raxcli.utils import get_enum_as_dict
 from raxcli.apps.loadbalancer.utils import LoadBalancerCommand, get_client
@@ -35,9 +37,12 @@ class ListCommand(LoadBalancerCommand, BaseListCommand):
 
         available_algorithms = get_enum_as_dict(Algorithm, True)
         algorithms = client.list_supported_algorithms()
-        result = [(value, key) for key, value in available_algorithms.items()
-                  if value in algorithms]
-        result = sorted(result)
 
-        columns = ('ID', 'Algorithm')
-        return (columns, result)
+        result = []
+        for algorithm, id in available_algorithms.items():
+            if id in algorithms:
+                result.append(AlgorithmModel({'id': id,
+                                              'algorithm': algorithm}))
+
+        collection = Collection(result)
+        return collection.generate_output()
