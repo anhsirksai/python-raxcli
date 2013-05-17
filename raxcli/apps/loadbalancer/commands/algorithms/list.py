@@ -15,30 +15,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 
-__all__ = [
-    'get_enum_as_dict'
-]
+from libcloud.loadbalancer.base import Algorithm
+
+from raxcli.commands import BaseListCommand
+from raxcli.utils import get_enum_as_dict
+from raxcli.apps.loadbalancer.utils import LoadBalancerCommand, get_client
 
 
-def get_enum_as_dict(cls, friendly_names=False):
+class ListCommand(LoadBalancerCommand, BaseListCommand):
     """
-    Convert an "enum" class to a dict key is the enum name and value is an enum
-    value.
+    Output a list of the available loadbalancing algorithms.
     """
-    result = {}
-    for key, value in cls.__dict__.items():
-        if key.startswith('__'):
-            continue
+    log = logging.getLogger(__name__)
 
-        if key[0] != key[0].upper():
-            continue
+    def take_action(self, parsed_args):
+        client = get_client(parsed_args)
 
-        name = key
+        available_algorithms = get_enum_as_dict(Algorithm, True)
+        algorithms = client.list_supported_algorithms()
+        result = [(value, key) for key, value in available_algorithms.items()
+                  if value in algorithms]
+        result = sorted(result)
 
-        if friendly_names:
-            name = name.replace('_', ' ').lower().title()
-
-        result[name] = value
-
-    return result
+        columns = ('ID', 'Algorithm')
+        return (columns, result)

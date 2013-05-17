@@ -82,7 +82,8 @@ class AppCommandManager(object):
                     try:
                         mod = __import__(module_path, fromlist=[command_class])
                     except ImportError, e:
-                        LOG.debug('Failed to load module: %s' % (str(e)))
+                        LOG.debug('Failed to load module "%s": %s' %
+                                  (module_path, str(e)))
                         continue
 
                     command_module = getattr(mod, command_class, None)

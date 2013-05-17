@@ -16,29 +16,25 @@
 # limitations under the License.
 
 
-__all__ = [
-    'get_enum_as_dict'
-]
+import logging
+
+from raxcli.models import Placeholder, Collection
+from raxcli.apps.loadbalancer.resources import Member
+from raxcli.apps.loadbalancer.utils import get_client
+from raxcli.apps.loadbalancer.utils import LoadBalancerBalancerListCommand
 
 
-def get_enum_as_dict(cls, friendly_names=False):
+class ListMembersCommand(LoadBalancerBalancerListCommand):
     """
-    Convert an "enum" class to a dict key is the enum name and value is an enum
-    value.
+    Output a list of the members attached to the provided loadbalancer.
     """
-    result = {}
-    for key, value in cls.__dict__.items():
-        if key.startswith('__'):
-            continue
+    log = logging.getLogger(__name__)
 
-        if key[0] != key[0].upper():
-            continue
+    def take_action(self, parsed_args):
+        client = get_client(parsed_args)
+        balancer = Placeholder(parsed_args.balancer_id)
 
-        name = key
-
-        if friendly_names:
-            name = name.replace('_', ' ').lower().title()
-
-        result[name] = value
-
-    return result
+        members = client.balancer_list_members(balancer=balancer)
+        members = [Member(m) for m in members]
+        collection = Collection(members)
+        return collection.generate_output()

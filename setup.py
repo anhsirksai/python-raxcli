@@ -24,7 +24,7 @@ from os.path import join as pjoin
 from distutils.core import Command
 from setuptools import setup, find_packages
 from subprocess import call
-from unittest2 import TestLoader, TextTestRunner
+from unittest import TestLoader, TextTestRunner
 
 try:
     long_description = open('README.md', 'rt').read()

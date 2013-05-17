@@ -20,6 +20,7 @@ import logging
 import sys
 from os.path import join as pjoin
 
+import libcloud
 import libcloud.security
 from cliff.app import App
 
@@ -66,7 +67,10 @@ def main(argv=sys.argv[1:]):
     if '--debug' in argv:
         # TODO: improve --debug support, done here very early so we can
         # see everything possible.
-        logging.basicConfig(filename='/dev/stderr',
+        file_path = '/dev/stderr'
+        file_handle = open(file_path, 'a')
+        libcloud.enable_debug(file_handle)
+        logging.basicConfig(filename=file_path,
                             filemode='w',
                             level=logging.DEBUG)
     myapp = RaxCliApp()

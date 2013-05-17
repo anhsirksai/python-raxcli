@@ -15,30 +15,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 
-__all__ = [
-    'get_enum_as_dict'
-]
+from raxcli.commands import BaseListCommand
+from raxcli.apps.loadbalancer.utils import LoadBalancerCommand, get_client
 
 
-def get_enum_as_dict(cls, friendly_names=False):
+class ListCommand(LoadBalancerCommand, BaseListCommand):
     """
-    Convert an "enum" class to a dict key is the enum name and value is an enum
-    value.
+    Output Protocol list.
     """
-    result = {}
-    for key, value in cls.__dict__.items():
-        if key.startswith('__'):
-            continue
+    log = logging.getLogger(__name__)
 
-        if key[0] != key[0].upper():
-            continue
+    def take_action(self, parsed_args):
+        client = get_client(parsed_args)
 
-        name = key
+        protocols = client.ex_list_protocols_with_default_ports()
 
-        if friendly_names:
-            name = name.replace('_', ' ').lower().title()
-
-        result[name] = value
-
-    return result
+        columns = ('Protocol', 'Port')
+        return (columns, protocols)

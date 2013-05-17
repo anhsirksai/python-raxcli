@@ -18,33 +18,33 @@
 import sys
 import unittest2 as unittest
 
-from raxcli.utils import get_enum_as_tuples
+from raxcli.utils import get_enum_as_dict
 
 
 class TestUtils(unittest.TestCase):
-    def test_get_enum_as_tuples(self):
+    def test_get_enum_as_dict(self):
         class EnumClass1(object):
             KEY1 = 0
             KEY_TWO_TWO = 1
             SOME_KEY_SOME_SOME = 2
 
-        result1 = get_enum_as_tuples(EnumClass1, False)
-        result2 = get_enum_as_tuples(EnumClass1, True)
+        result1 = get_enum_as_dict(EnumClass1, False)
+        result2 = get_enum_as_dict(EnumClass1, True)
 
-        expected1 = [
-            (0, 'KEY1'),
-            (1, 'KEY_TWO_TWO'),
-            (2, 'SOME_KEY_SOME_SOME')
-        ]
+        expected1 = {
+            'KEY1': 0,
+            'KEY_TWO_TWO': 1,
+            'SOME_KEY_SOME_SOME': 2
+        }
 
-        expected2 = [
-            (0, 'Key1'),
-            (1, 'Key Two Two'),
-            (2, 'Some Key Some Some')
-        ]
+        expected2 = {
+            'Key1': 0,
+            'Key Two Two': 1,
+            'Some Key Some Some': 2
+        }
 
-        self.assertSetEqual(set(result1), set(expected1))
-        self.assertSetEqual(set(result2), set(expected2))
+        self.assertDictEqual(result1, expected1)
+        self.assertDictEqual(result2, expected2)
 
 
 if __name__ == '__main__':

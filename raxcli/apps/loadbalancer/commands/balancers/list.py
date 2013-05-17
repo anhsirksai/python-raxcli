@@ -15,30 +15,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 
-__all__ = [
-    'get_enum_as_dict'
-]
+from raxcli.models import Collection
+from raxcli.commands import BaseListCommand
+from raxcli.apps.loadbalancer.resources import Balancer
+from raxcli.apps.loadbalancer.utils import \
+    LoadBalancerCommand, for_all_regions_list
 
 
-def get_enum_as_dict(cls, friendly_names=False):
+class ListCommand(LoadBalancerCommand, BaseListCommand):
     """
-    Convert an "enum" class to a dict key is the enum name and value is an enum
-    value.
+    Output Balancers list.
     """
-    result = {}
-    for key, value in cls.__dict__.items():
-        if key.startswith('__'):
-            continue
+    log = logging.getLogger(__name__)
 
-        if key[0] != key[0].upper():
-            continue
+    def take_action(self, parsed_args):
+        def get_balancers(client):
+            return [Balancer(b) for b in client.list_balancers()]
 
-        name = key
+        balancers = for_all_regions_list(parsed_args, get_balancers)
+        collection = Collection(balancers)
 
-        if friendly_names:
-            name = name.replace('_', ' ').lower().title()
-
-        result[name] = value
-
-    return result
+        return collection.generate_output()
