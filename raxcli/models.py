@@ -82,9 +82,16 @@ class Model(object):
         return [attr for field, attr in sorted(attrs, key=itemgetter(0))]
 
     def __init__(self, obj):
+        self._obj_type = 'dict' if isinstance(obj, dict) else 'cls'
+
         for name, source in self.get_attrs():
             field = getattr(self, name)
-            field.value = getattr(obj, source)
+
+            if self._obj_type == 'dict':
+                field.value = obj[source]
+            elif self._obj_type == 'cls':
+                field.value = getattr(obj, source)
+
             setattr(self, name, copy.copy(field))
 
     def generate_output(self):
