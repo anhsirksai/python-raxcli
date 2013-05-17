@@ -25,9 +25,9 @@ class Image(Model):
     extra = Attribute()
 
 
-class Size(Model):
+class Flavor(Model):
     """
-    Size resource.
+    Flavor resource.
     """
     id = Attribute()
     name = Attribute()

@@ -18,7 +18,7 @@
 import logging
 
 from raxcli.apps.server.utils import BaseServerListCommand, get_client
-from raxcli.apps.server.resources import Size
+from raxcli.apps.server.resources import Flavor
 from raxcli.models import Collection
 
 
@@ -35,6 +35,6 @@ class ListCommand(BaseServerListCommand):
 
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
-        sizes = [Size(size) for size in client.list_sizes()]
-        collection = Collection(sizes)
+        flavor = [Flavor(flavor) for flavor in client.list_sizes()]
+        collection = Collection(flavor)
         return collection.generate_output()
