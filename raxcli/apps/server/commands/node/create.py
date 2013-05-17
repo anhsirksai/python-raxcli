@@ -17,26 +17,32 @@
 
 import logging
 
-from raxcli.apps.server.utils import BaseServerListCommand, get_client
-from raxcli.apps.server.resources import Size
-from raxcli.models import Collection
+from raxcli.apps.server.utils import BaseServerCommand, get_client
+from raxcli.apps.server.resources import Node
 
 
-class ListCommand(BaseServerListCommand):
+class CreateCommand(BaseServerCommand):
     """
-    Return a list of cloud server nodes
+    Create a node
     """
     log = logging.getLogger(__name__)
 
 
     def get_parser(self, prog_name):
-        parser = super(ListCommand, self).get_parser(prog_name=prog_name)
-        parser.add_argument('--region', dest='region', help='(ord, dfw, lon)')
+        parser = super(CreateCommand, self).get_parser(prog_name=prog_name)
+        parser.add_argument('--name', dest='name', required=True)
+        parser.add_argument('--size', dest='size', required=True)
+        parser.add_argument('--image', dest='image', required=True)
+        parser.add_argument('--region', dest='region', required=True, help='(ord, dfw, lon)')
         return parser
 
 
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
-        sizes = [Size(size) for size in client.list_sizes()]
-        collection = Collection(sizes)
-        return collection.generate_output()
+        images = client.list_images()
+        image = [i for i in images if i.id == parsed_args.image][0]
+        sizes = client.list_sizes()
+        size = [s for s in sizes if s.id == parsed_args.size][0]
+        node = Node(
+            client.create_node(name=parsed_args.name, image=image, size=size))
+        return node.generate_output()

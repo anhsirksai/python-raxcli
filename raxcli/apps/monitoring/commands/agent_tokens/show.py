@@ -33,6 +33,7 @@ class ShowCommand(MonitoringCommand, ShowOne):
     def get_parser(self, prog_name):
         parser = super(ShowCommand, self).get_parser(prog_name=prog_name)
         parser.add_argument('--id', dest='agent_token_id', required=True)
+        parser.add_argument('--region', dest='region', help='(ord, dfw, lon)')
         return parser
 
     def take_action(self, parsed_args):
