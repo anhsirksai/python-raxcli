@@ -31,7 +31,7 @@ class CreateCommand(BaseServerListCommand):
     def get_parser(self, prog_name):
         parser = super(CreateCommand, self).get_parser(prog_name=prog_name)
         parser.add_argument('--name', dest='name', required=True)
-        parser.add_argument('--size', dest='size', required=True)
+        parser.add_argument('--flavor', dest='flavor', required=True)
         parser.add_argument('--image', dest='image', required=True)
         parser.add_argument('--region', dest='region', required=True,
                             help='(ord, dfw, lon)')
@@ -41,10 +41,14 @@ class CreateCommand(BaseServerListCommand):
         client = get_client(parsed_args)
         images = client.list_images()
         image = [i for i in images if i.id == parsed_args.image][0]
+        if not image:
+            raise Exception('Invalid Image')
         sizes = client.list_sizes()
-        size = [s for s in sizes if s.id == parsed_args.size][0]
+        flavor = [s for s in sizes if s.id == parsed_args.flavor][0]
+        if not flavor:
+            raise Exception('Invalid Flavor')
         node = client.create_node(name=parsed_args.name, image=image,
-                                  size=size)
+                                  size=flavor)
         node = Node(node)
         collection = Collection([node])
         return collection.generate_output()
