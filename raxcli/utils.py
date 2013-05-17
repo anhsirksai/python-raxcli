@@ -21,7 +21,7 @@ __all__ = [
 ]
 
 
-def get_enum_as_dict(cls, friendly_names=False):
+def get_enum_as_dict(cls, reverse=False, friendly_names=False):
     """
     Convert an "enum" class to a dict key is the enum name and value is an enum
     value.
@@ -39,6 +39,9 @@ def get_enum_as_dict(cls, friendly_names=False):
         if friendly_names:
             name = name.replace('_', ' ').lower().title()
 
-        result[name] = value
+        if reverse:
+            result[value] = name
+        else:
+            result[name] = value
 
     return result
