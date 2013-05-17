@@ -21,7 +21,6 @@ from cliff.show import ShowOne
 
 from raxcli.apps.servers.utils import BaseServerCommand, get_client
 from raxcli.apps.servers.resources import Image
-from raxcli.models import Collection
 
 
 class ShowCommand(BaseServerCommand, ShowOne):

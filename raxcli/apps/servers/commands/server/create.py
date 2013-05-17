@@ -21,7 +21,6 @@ from cliff.show import ShowOne
 
 from raxcli.apps.servers.utils import BaseServerCommand, get_client
 from raxcli.apps.servers.resources import Node
-from raxcli.models import Collection
 
 
 class CreateCommand(BaseServerCommand, ShowOne):
@@ -50,5 +49,5 @@ class CreateCommand(BaseServerCommand, ShowOne):
         if len(flavor) == 0:
             raise Exception('Invalid Flavor')
         node = Node(client.create_node(name=parsed_args.name, image=image[0],
-                                  size=flavor[0]))
+                    size=flavor[0]))
         return node.generate_output()
