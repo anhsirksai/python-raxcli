@@ -60,6 +60,12 @@ class Attribute(object):
         self._creation_count = Attribute._creation_count + 1
         Attribute._creation_count = self._creation_count
 
+    def get_value(self):
+        if self.transform_func:
+            return self.transform_func(self.value)
+        else:
+            return self.value
+
 
 class Model(object):
     """
@@ -98,7 +104,7 @@ class Model(object):
 
     def generate_output(self):
         columns = [attr for attr, _ in self.get_attrs(view_type='view_single')]
-        data = [getattr(self, attr).value for attr in columns]
+        data = [getattr(self, attr).get_value() for attr in columns]
         return (columns, data)
 
 
@@ -120,11 +126,7 @@ class Collection(object):
             values = []
             for key in columns:
                 attr = getattr(obj, key)
-
-                if attr.transform_func:
-                    value = attr.transform_func(attr.value)
-                else:
-                    value = attr.value
+                value = attr.get_value()
                 values.append(value)
 
             data.append(values)
