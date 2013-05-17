@@ -42,13 +42,13 @@ class CreateCommand(BaseServerCommand, ShowOne):
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
         images = client.list_images()
-        image = [i for i in images if i.id == parsed_args.image][0]
-        if not image:
+        image = [i for i in images if i.id == parsed_args.image]
+        if len(image) == 0:
             raise Exception('Invalid Image')
         sizes = client.list_sizes()
         flavor = [s for s in sizes if s.id == parsed_args.flavor][0]
-        if not flavor:
+        if len(flavor) == 0:
             raise Exception('Invalid Flavor')
-        node = Node(client.create_node(name=parsed_args.name, image=image,
-                                  size=flavor))
+        node = Node(client.create_node(name=parsed_args.name, image=image[0],
+                                  size=flavor[0]))
         return node.generate_output()
