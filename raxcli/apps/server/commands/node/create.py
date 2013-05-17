@@ -28,16 +28,14 @@ class CreateCommand(BaseServerListCommand):
     """
     log = logging.getLogger(__name__)
 
-
     def get_parser(self, prog_name):
         parser = super(CreateCommand, self).get_parser(prog_name=prog_name)
         parser.add_argument('--name', dest='name', required=True)
         parser.add_argument('--size', dest='size', required=True)
         parser.add_argument('--image', dest='image', required=True)
         parser.add_argument('--region', dest='region', required=True,
-            help='(ord, dfw, lon)')
+                            help='(ord, dfw, lon)')
         return parser
-
 
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
@@ -46,7 +44,7 @@ class CreateCommand(BaseServerListCommand):
         sizes = client.list_sizes()
         size = [s for s in sizes if s.id == parsed_args.size][0]
         node = client.create_node(name=parsed_args.name, image=image,
-          size=size)
+                                  size=size)
         node = Node(node)
         collection = Collection([node])
         return collection.generate_output()

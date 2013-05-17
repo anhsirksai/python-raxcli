@@ -18,8 +18,6 @@
 import logging
 
 from raxcli.apps.server.utils import BaseServerCommand, get_client
-from raxcli.apps.server.resources import Node
-from raxcli.models import Collection
 
 
 class DestroyCommand(BaseServerCommand):
@@ -28,14 +26,12 @@ class DestroyCommand(BaseServerCommand):
     """
     log = logging.getLogger(__name__)
 
-
     def get_parser(self, prog_name):
         parser = super(DestroyCommand, self).get_parser(prog_name=prog_name)
         parser.add_argument('--id', dest='id', required=True)
         parser.add_argument('--region', dest='region', required=True,
-            help='(ord, dfw, lon)')
+                            help='(ord, dfw, lon)')
         return parser
-
 
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
