@@ -24,18 +24,21 @@ from raxcli.models import Attribute, Model, Collection
 class Entity(Model):
     id = Attribute(src='key')
     label = Attribute()
+    state = Attribute(transform_func=lambda value: value + '-foo')
 
 
 class FakeEntity1(object):
     key = 'key1'
     ip = '127.0.0.1'
     label = 'test label'
+    state = 'unknown1'
 
 
 class FakeEntity2(object):
     key = 'key2'
     ip = '127.0.0.1'
     label = 'label2'
+    state = 'unknown2'
 
 
 class TestModels(unittest.TestCase):
@@ -47,16 +50,16 @@ class TestModels(unittest.TestCase):
 
         result1 = en1.generate_output()
         expected1 = (
-            ['id', 'label'],
-            ['key1', 'test label']
+            ['id', 'label', 'state'],
+            ['key1', 'test label', 'unknown1-foo']
         )
 
         result2 = collection.generate_output()
         expected2 = (
-            ['id', 'label'],
+            ['id', 'label', 'state'],
             [
-                ['key1', 'test label'],
-                ['key2', 'label2']
+                ['key1', 'test label', 'unknown1-foo'],
+                ['key2', 'label2', 'unknown2-foo']
             ]
         )
 
