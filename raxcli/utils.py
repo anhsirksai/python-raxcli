@@ -25,6 +25,16 @@ def get_enum_as_dict(cls, reverse=False, friendly_names=False):
     """
     Convert an "enum" class to a dict key is the enum name and value is an enum
     value.
+
+    @param  cls: Enum class to operate on.
+    @type   cls: C{class}
+
+    @param  reverse: True to reverse the key and value so the dict key will be
+                     enum value and the dict value will be enum key.
+    @type   reverse: C{bool}
+
+    @param  friendly_names: True to make enum name value "user friendly".
+    @type   friendly_names: C{bool}
     """
     result = {}
     for key, value in cls.__dict__.items():
