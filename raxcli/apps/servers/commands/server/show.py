@@ -25,7 +25,7 @@ from raxcli.apps.servers.resources import Node
 
 class ShowCommand(BaseServerCommand, ShowOne):
     """
-    Show an Image
+    Show a server
     """
     log = logging.getLogger(__name__)
 
