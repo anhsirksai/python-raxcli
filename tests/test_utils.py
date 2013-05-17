@@ -28,8 +28,8 @@ class TestUtils(unittest.TestCase):
             KEY_TWO_TWO = 1
             SOME_KEY_SOME_SOME = 2
 
-        result1 = get_enum_as_dict(EnumClass1, False)
-        result2 = get_enum_as_dict(EnumClass1, True)
+        result1 = get_enum_as_dict(EnumClass1, friendly_names=False)
+        result2 = get_enum_as_dict(EnumClass1, friendly_names=True)
 
         expected1 = {
             'KEY1': 0,
