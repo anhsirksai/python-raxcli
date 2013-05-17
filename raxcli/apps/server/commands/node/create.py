@@ -17,11 +17,12 @@
 
 import logging
 
-from raxcli.apps.server.utils import BaseServerCommand, get_client
+from raxcli.apps.server.utils import BaseServerListCommand, get_client
 from raxcli.apps.server.resources import Node
+from raxcli.models import Collection
 
 
-class CreateCommand(BaseServerCommand):
+class CreateCommand(BaseServerListCommand):
     """
     Create a node
     """
@@ -33,7 +34,8 @@ class CreateCommand(BaseServerCommand):
         parser.add_argument('--name', dest='name', required=True)
         parser.add_argument('--size', dest='size', required=True)
         parser.add_argument('--image', dest='image', required=True)
-        parser.add_argument('--region', dest='region', required=True, help='(ord, dfw, lon)')
+        parser.add_argument('--region', dest='region', required=True,
+            help='(ord, dfw, lon)')
         return parser
 
 
@@ -43,6 +45,8 @@ class CreateCommand(BaseServerCommand):
         image = [i for i in images if i.id == parsed_args.image][0]
         sizes = client.list_sizes()
         size = [s for s in sizes if s.id == parsed_args.size][0]
-        node = Node(
-            client.create_node(name=parsed_args.name, image=image, size=size))
-        return node.generate_output()
+        node = client.create_node(name=parsed_args.name, image=image,
+          size=size)
+        node = Node(node)
+        collection = Collection([node])
+        return collection.generate_output()
