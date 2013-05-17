@@ -43,13 +43,15 @@ class Attribute(object):
     """
     _creation_count = 0
 
-    def __init__(self, src=None, view_single=True, view_list=True):
+    def __init__(self, src=None, transform_func=None, view_single=True,
+                 view_list=True):
         """
         @keyword src: Optional name of the field on the object which acts as a
                       source for this attribute.
         @keyword src: C{str}
         """
         self.src = src
+        self.transform_func = transform_func
         self.view_single = view_single
         self.view_list = view_list
 
@@ -114,6 +116,17 @@ class Collection(object):
             if not columns:
                 columns = [attr for attr, _ in
                            obj.get_attrs(view_type='view_list')]
-            data.append([getattr(obj, attr).value for attr in columns])
+
+            values = []
+            for key in columns:
+                attr = getattr(obj, key)
+
+                if attr.transform_func:
+                    value = attr.transform_func(attr.value)
+                else:
+                    value = attr.value
+                values.append(value)
+
+            data.append(values)
 
         return (columns, data)
