@@ -17,16 +17,26 @@
 
 __all__ = [
     'Balancer',
-    'Member'
+    'Member',
+    'Algorithm'
 ]
 
+from libcloud.loadbalancer.types import State
+
+from raxcli.utils import get_enum_as_dict
 from raxcli.models import Attribute, Model
+
+STATES = get_enum_as_dict(State, reverse=True)
+
+
+def state_to_string(value):
+    return STATES[value]
 
 
 class Balancer(Model):
     id = Attribute()
     name = Attribute()
-    state = Attribute()
+    state = Attribute(transform_func=state_to_string)
     ip = Attribute()
     port = Attribute()
 
