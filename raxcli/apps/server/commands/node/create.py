@@ -51,5 +51,4 @@ class CreateCommand(BaseServerCommand, ShowOne):
             raise Exception('Invalid Flavor')
         node = Node(client.create_node(name=parsed_args.name, image=image,
                                   size=flavor))
-        node = Node(node)
         return node.generate_output()
