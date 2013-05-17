@@ -11,7 +11,7 @@ class Node(Model):
     uuid = Attribute()
     public_ips = Attribute()
     private_ips = Attribute()
-    size = Attribute()
+    flavor = Attribute(src='size')
     image = Attribute()
     extra = Attribute()
 
