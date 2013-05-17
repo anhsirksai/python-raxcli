@@ -28,6 +28,12 @@ class ListCommand(BaseServerListCommand):
     """
     log = logging.getLogger(__name__)
 
+    def get_parser(self, prog_name):
+        parser = super(ListCommand, self).get_parser(prog_name=prog_name)
+        parser.add_argument('--region', dest='region', required=True,
+                            help='(ord, dfw, lon)')
+        return parser
+
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
         images = [Image(image) for image in client.list_images()]
