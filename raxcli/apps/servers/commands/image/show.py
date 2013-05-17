@@ -17,24 +17,31 @@
 
 import logging
 
-from raxcli.apps.server.utils import BaseServerListCommand, get_client
-from raxcli.apps.server.resources import Node
+from cliff.show import ShowOne
+
+from raxcli.apps.servers.utils import BaseServerCommand, get_client
+from raxcli.apps.servers.resources import Image
 from raxcli.models import Collection
 
 
-class ListCommand(BaseServerListCommand):
+class ShowCommand(BaseServerCommand, ShowOne):
     """
-    Return a list of cloud server nodes
+    Show an Image
     """
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
-        parser = super(ListCommand, self).get_parser(prog_name=prog_name)
-        parser.add_argument('--region', dest='region', help='(ord, dfw, lon)')
+        parser = super(ShowCommand, self).get_parser(prog_name=prog_name)
+        parser.add_argument('--id', dest='id', required=True)
+        parser.add_argument('--region', dest='region', required=True,
+                            help='(ord, dfw, lon)')
         return parser
 
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
-        nodes = [Node(node) for node in client.list_nodes()]
-        collection = Collection(nodes)
-        return collection.generate_output()
+        images = client.list_images()
+        image = [i for i in images if i.id == parsed_args.id][0]
+        if not image:
+            raise Exception('Invalid Image')
+        image = Image(image)
+        return image.generate_output()

@@ -17,8 +17,8 @@
 
 import logging
 
-from raxcli.apps.server.utils import BaseServerListCommand, get_client
-from raxcli.apps.server.resources import Flavor
+from raxcli.apps.servers.utils import BaseServerListCommand, get_client
+from raxcli.apps.servers.resources import Image
 from raxcli.models import Collection
 
 
@@ -30,11 +30,12 @@ class ListCommand(BaseServerListCommand):
 
     def get_parser(self, prog_name):
         parser = super(ListCommand, self).get_parser(prog_name=prog_name)
-        parser.add_argument('--region', dest='region', help='(ord, dfw, lon)')
+        parser.add_argument('--region', dest='region', required=True,
+                            help='(ord, dfw, lon)')
         return parser
 
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
-        flavor = [Flavor(flavor) for flavor in client.list_sizes()]
-        collection = Collection(flavor)
+        images = [Image(image) for image in client.list_images()]
+        collection = Collection(images)
         return collection.generate_output()

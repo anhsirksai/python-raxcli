@@ -17,25 +17,38 @@
 
 import logging
 
-from raxcli.apps.server.utils import BaseServerListCommand, get_client
-from raxcli.apps.server.resources import Image
+from cliff.show import ShowOne
+
+from raxcli.apps.servers.utils import BaseServerCommand, get_client
+from raxcli.apps.servers.resources import Node
 from raxcli.models import Collection
 
 
-class ListCommand(BaseServerListCommand):
+class CreateCommand(BaseServerCommand, ShowOne):
     """
-    Return a list of cloud server nodes
+    Create a node
     """
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
-        parser = super(ListCommand, self).get_parser(prog_name=prog_name)
+        parser = super(CreateCommand, self).get_parser(prog_name=prog_name)
+        parser.add_argument('--name', dest='name', required=True)
+        parser.add_argument('--flavor', dest='flavor', required=True)
+        parser.add_argument('--image', dest='image', required=True)
         parser.add_argument('--region', dest='region', required=True,
                             help='(ord, dfw, lon)')
         return parser
 
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
-        images = [Image(image) for image in client.list_images()]
-        collection = Collection(images)
-        return collection.generate_output()
+        images = client.list_images()
+        image = [i for i in images if i.id == parsed_args.image][0]
+        if not image:
+            raise Exception('Invalid Image')
+        sizes = client.list_sizes()
+        flavor = [s for s in sizes if s.id == parsed_args.flavor][0]
+        if not flavor:
+            raise Exception('Invalid Flavor')
+        node = Node(client.create_node(name=parsed_args.name, image=image,
+                                  size=flavor))
+        return node.generate_output()

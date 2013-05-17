@@ -17,24 +17,24 @@
 
 import logging
 
-from raxcli.apps.server.utils import BaseServerCommand, get_client
+from raxcli.apps.servers.utils import BaseServerListCommand, get_client
+from raxcli.apps.servers.resources import Flavor
+from raxcli.models import Collection
 
 
-class DestroyCommand(BaseServerCommand):
+class ListCommand(BaseServerListCommand):
     """
-    Destroy a node
+    Return a list of cloud server nodes
     """
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
-        parser = super(DestroyCommand, self).get_parser(prog_name=prog_name)
-        parser.add_argument('--id', dest='id', required=True)
-        parser.add_argument('--region', dest='region', required=True,
-                            help='(ord, dfw, lon)')
+        parser = super(ListCommand, self).get_parser(prog_name=prog_name)
+        parser.add_argument('--region', dest='region', help='(ord, dfw, lon)')
         return parser
 
     def take_action(self, parsed_args):
         client = get_client(parsed_args)
-        nodes = client.list_nodes()
-        node = [n for n in nodes if n.id == parsed_args.id][0]
-        client.destroy_node(node)
+        flavor = [Flavor(flavor) for flavor in client.list_sizes()]
+        collection = Collection(flavor)
+        return collection.generate_output()
