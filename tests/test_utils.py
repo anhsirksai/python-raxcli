@@ -30,6 +30,8 @@ class TestUtils(unittest.TestCase):
 
         result1 = get_enum_as_dict(EnumClass1, friendly_names=False)
         result2 = get_enum_as_dict(EnumClass1, friendly_names=True)
+        result1_reversed = get_enum_as_dict(EnumClass1, reverse=True,
+                                            friendly_names=False)
 
         expected1 = {
             'KEY1': 0,
@@ -43,8 +45,14 @@ class TestUtils(unittest.TestCase):
             'Some Key Some Some': 2
         }
 
+        expected3 = {
+            0: 'KEY1',
+            1: 'KEY_TWO_TWO',
+            2: 'SOME_KEY_SOME_SOME'
+        }
         self.assertDictEqual(result1, expected1)
         self.assertDictEqual(result2, expected2)
+        self.assertDictEqual(result1_reversed, expected3)
 
 
 if __name__ == '__main__':
