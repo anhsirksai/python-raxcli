@@ -20,17 +20,27 @@ __all__ = [
 ]
 
 
+SERVICE_CATALOG_CACHE = None
+
+
 def for_all_regions(get_client_func, catalog_entry, action_func, parsed_args):
     """
     Run the provided function on all the available regions.
 
     Available regions are determined based on the user service catalog entries.
     """
+    global SERVICE_CATALOG_CACHE
+
     result = []
 
     # TODO: reuse auth instance
-    client = get_client_func(parsed_args)
-    catalog = client.connection.get_service_catalog()
+    if SERVICE_CATALOG_CACHE is None:
+        client = get_client_func(parsed_args)
+        catalog = client.connection.get_service_catalog()
+        SERVICE_CATALOG_CACHE = catalog
+    else:
+        catalog = SERVICE_CATALOG_CACHE
+
     urls = catalog.get_public_urls(service_type=catalog_entry,
                                    name=catalog_entry)
 
