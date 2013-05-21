@@ -2,7 +2,8 @@ cliff>=1.3,<=1.4
 -e git+git://github.com/racker/python-cliff-rackspace.git#egg=cliff_rackspace
 -e git+git://github.com/racker/cliff-tablib.git#egg=clifftablib
 
-apache-libcloud>=0.12.4
+#apache-libcloud>=0.12.4
+-e git+git://github.com/apache/libcloud.git@0.12.x#egg=libcloud
 
 rackspace-monitoring>=0.3,<=0.4
 service-registry>=0.2,<=0.3
