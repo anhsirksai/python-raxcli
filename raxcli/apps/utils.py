@@ -15,27 +15,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-
-from raxcli.models import Collection
-from raxcli.commands import BaseListCommand
-from raxcli.apps.loadbalancer.resources import Balancer
-from raxcli.apps.loadbalancer.utils import LoadBalancerCommand
-from raxcli.apps.loadbalancer.utils import for_all_regions
+__all__ = [
+    'for_all_regions'
+]
 
 
-class ListCommand(LoadBalancerCommand, BaseListCommand):
+def for_all_regions(get_client_func, catalog_entry, action_func, parsed_args):
     """
-    Output Balancers list.
+    Run the provided function on all the available regions.
+
+    Available regions are determined based on the user service catalog entries.
     """
-    log = logging.getLogger(__name__)
+    result = []
 
-    def take_action(self, parsed_args):
-        def get_balancers(client):
-            return [Balancer(b) for b in client.list_balancers()]
+    # TODO: reuse auth instance
+    client = get_client_func(parsed_args)
+    catalog = client.connection.get_service_catalog()
+    urls = catalog.get_public_urls(service_type=catalog_entry,
+                                   name=catalog_entry)
 
-        balancers = for_all_regions(action_func=get_balancers,
-                                    parsed_args=parsed_args)
-        collection = Collection(balancers)
+    for api_url in urls:
+        parsed_args.api_url = api_url
+        client = get_client_func(parsed_args)
+        item = action_func(client)
+        result.extend(item)
 
-        return collection.generate_output()
+    return result

@@ -15,10 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+__all__ = [
+    'for_all_regions'
+]
+
 import os
 
 from raxcli.commands import BaseCommand, BaseListCommand
 from raxcli.config import get_config as get_base_config
+from raxcli.apps.utils import for_all_regions as base_get_all_regions
+from raxcli.apps.loadbalancer.constants import SERVICE_CATALOG_ENTRY_NAME
+
 
 from libcloud.loadbalancer.providers import get_driver
 from libcloud.loadbalancer.types import Provider
@@ -49,17 +56,6 @@ class LoadBalancerBalancerListCommand(LoadBalancerCommand, BaseListCommand):
 
 def get_config():
     return get_base_config(app='loadbalancer')
-
-
-def for_all_regions_list(parsed_args, func):
-    output = []
-    # TODO: others, LON?
-    lbregions = ['ord', 'dfw']
-    for region in lbregions:
-        parsed_args.region = region
-        client = get_client(parsed_args)
-        output.extend(func(client))
-    return output
 
 
 def get_client(parsed_args):
@@ -95,3 +91,10 @@ def get_client(parsed_args):
         options['ex_force_region'] = parsed_args.region
 
     return driver(username, api_key, **options)
+
+
+def for_all_regions(action_func, parsed_args):
+    return base_get_all_regions(get_client_func=get_client,
+                                catalog_entry=SERVICE_CATALOG_ENTRY_NAME,
+                                action_func=action_func,
+                                parsed_args=parsed_args)
