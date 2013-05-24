@@ -58,7 +58,7 @@ def get_config():
     return get_base_config(app='loadbalancer')
 
 
-def get_client(parsed_args):
+def get_client(parsed_args, driver_kwargs=None):
     config = get_config()
     # TODO: regions/uk
     driver = get_driver(Provider.RACKSPACE_US)
@@ -79,7 +79,10 @@ def get_client(parsed_args):
     if not api_key:
         raise ValueError('Missing required argument: api-key')
 
-    options = {}
+    if driver_kwargs:
+        options = driver_kwargs.copy()
+    else:
+        options = {}
 
     if api_url is not None:
         options['ex_force_base_url'] = api_url

@@ -33,7 +33,6 @@ def for_all_regions(get_client_func, catalog_entry, action_func, parsed_args):
 
     result = []
 
-    # TODO: reuse auth instance
     if SERVICE_CATALOG_CACHE is None:
         client = get_client_func(parsed_args)
         catalog = client.connection.get_service_catalog()
@@ -43,10 +42,13 @@ def for_all_regions(get_client_func, catalog_entry, action_func, parsed_args):
 
     urls = catalog.get_public_urls(service_type=catalog_entry,
                                    name=catalog_entry)
+    auth_connection = client.connection.get_auth_connection_instance()
+
+    driver_kwargs = {'ex_auth_connection': auth_connection}
 
     for api_url in urls:
         parsed_args.api_url = api_url
-        client = get_client_func(parsed_args)
+        client = get_client_func(parsed_args, driver_kwargs=driver_kwargs)
         item = action_func(client)
         result.extend(item)
 
