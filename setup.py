@@ -18,13 +18,13 @@
 
 import os
 import sys
+import unittest
 
 from os.path import join as pjoin
 
 from distutils.core import Command
 from setuptools import setup, find_packages
 from subprocess import call
-from unittest import TestLoader, TextTestRunner
 
 try:
     long_description = open('README.md', 'rt').read()
@@ -86,15 +86,15 @@ class TestCommand(Command):
     def run(self):
         try:
             import unittest2
-            unittest2
+            unittest = unittest2
         except ImportError:
             print ('Missing "unittest2" library. You can install it using '
                    'pip: pip install unittest2')
             sys.exit(1)
 
-        loader = TestLoader()
+        loader = unittest.TestLoader()
         tests = loader.discover(TESTS_PATH)
-        runner = TextTestRunner(verbosity=2)
+        runner = unittest.TextTestRunner(verbosity=2)
         result = runner.run(tests)
 
         if not result.wasSuccessful():
