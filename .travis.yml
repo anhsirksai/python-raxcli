@@ -4,7 +4,7 @@ python:
   - "2.7"
   - "pypy"
 
-install: pip install -r dependencies.txt --use-mirrors
+install: pip install -r requirements.txt --use-mirrors
 script:
   - python setup.py flake8
   - python setup.py test
