@@ -20,7 +20,7 @@ __all__ = [
 ]
 
 
-SERVICE_CATALOG_CACHE = None
+CACHE = {}
 
 
 def for_all_regions(get_client_func, catalog_entry, action_func, parsed_args):
@@ -29,16 +29,20 @@ def for_all_regions(get_client_func, catalog_entry, action_func, parsed_args):
 
     Available regions are determined based on the user service catalog entries.
     """
-    global SERVICE_CATALOG_CACHE
 
     result = []
 
-    if SERVICE_CATALOG_CACHE is None:
+    cache_key = 'todo'
+
+    cache_item = CACHE.get(cache_key, None)
+
+    if cache_item is None:
         client = get_client_func(parsed_args)
-        catalog = client.connection.get_service_catalog()
-        SERVICE_CATALOG_CACHE = catalog
+        CACHE[cache_key] = client
     else:
-        catalog = SERVICE_CATALOG_CACHE
+        client = cache_item
+
+    catalog = client.connection.get_service_catalog()
 
     urls = catalog.get_public_urls(service_type=catalog_entry,
                                    name=catalog_entry)
