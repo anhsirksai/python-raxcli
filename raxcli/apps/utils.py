@@ -19,8 +19,11 @@ __all__ = [
     'for_all_regions'
 ]
 
+from raxcli.concurrency import get_pool, run_function, join_pool
+
 
 CACHE = {}
+pool = get_pool(10)
 
 
 def for_all_regions(get_client_func, catalog_entry, action_func, parsed_args):
@@ -50,10 +53,15 @@ def for_all_regions(get_client_func, catalog_entry, action_func, parsed_args):
 
     driver_kwargs = {'ex_auth_connection': auth_connection}
 
+    def run_in_pool(client):
+        item = action_func(client)
+        result.extend(item)
+
     for api_url in urls:
         parsed_args.api_url = api_url
         client = get_client_func(parsed_args, driver_kwargs=driver_kwargs)
-        item = action_func(client)
-        result.extend(item)
+        run_function(pool, run_in_pool, client)
+
+    join_pool(pool)
 
     return result
