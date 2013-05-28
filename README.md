@@ -7,7 +7,7 @@ Command line client for interacting with various Rackspace Cloud APIs.
 Command line client is available on PyPi and can be installed using pip:
 
 ```bash
-pip install -r raxcli
+pip install raxcli
 ```
 
 ## Settings Credentials
